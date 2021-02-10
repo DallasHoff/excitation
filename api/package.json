@@ -1,0 +1,26 @@
+{
+  "name": "excitation-api",
+  "version": "0.0.1",
+  "description": "An API for getting citation information about academic sources",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DallasHoff/excitation.git"
+  },
+  "author": "Dallas Hoffman",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/DallasHoff/excitation/issues"
+  },
+  "homepage": "https://github.com/DallasHoff/excitation#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
