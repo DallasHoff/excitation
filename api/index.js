@@ -30,7 +30,7 @@ app.get('/cite/webpage', async (req, res) => {
     var $a = (selector, attribute) => $(selector).first().attr(attribute)?.trim() || null;
     var $meta = (name) => $a(`meta[name="${name}"]`, 'content') || $a(`meta[property="${name}"]`, 'content') || null;
 
-    result.title = $('og:title') || 
+    result.title = $meta('og:title') || 
                     $e('head title');
     result.author = $meta('author') || 
                     $e('[rel="author"]') || 
