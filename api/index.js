@@ -17,9 +17,17 @@ app.get('/cite/webpage', async (req, res) => {
     var q = req.query.q;
     if (!q) return res.status(400).json({error: 'No URL was provided.'});
 
+    // Make sure URL has protocol
+    var url = q;
+    if (q.split('//').length === 1) {
+        url = 'http://' + q;
+    } else if (q.startsWith('//') === true) {
+        url = 'http://' + q.replace('//', '');
+    }
+
     // Get web page HTML
     try {
-        var {data: html} = await axios.get(q);
+        var {data: html} = await axios.get(url);
         var $ = cheerio.load(html);
     } catch (err) {
         return res.status(400).json({error: 'The URL provided does not lead to a valid web page.'});
