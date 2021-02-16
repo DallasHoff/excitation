@@ -44,16 +44,28 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     var $meta = (name) => $a(`meta[name="${name}"]`, 'content') || $a(`meta[property="${name}"]`, 'content') || null;
     
     result.title = $meta('og:title') || 
+                    $meta('pagename') || 
                     $e('head title');
     result.author = $meta('author') || 
                     $e('[rel="author"]') || 
                     $meta('web_author');
-    result.publisher = $meta('copyright') || 
-                    $meta('og:site_name') || 
+    result.publisher = $meta('og:site_name') || 
+                    $meta('application-name') || 
+                    $meta('copyright') || 
                     $meta('owner');
     result.modified = $meta('article:modified_time') || 
-                    $meta('revised');
+                    $meta('revised') || 
+                    $a('meta[http-equiv="last-modified"]', 'content') || 
+                    $a('meta[http-equiv="Last-Modified"]', 'content') || 
+                    $a('main time', 'datetime') || 
+                    $e('main time');
     result.published = $meta('article:published_time') || 
+                    $meta('creation_date') || 
+                    $meta('created') || 
+                    $a('meta[http-equiv="date"]', 'content') || 
+                    $a('meta[http-equiv="Date"]', 'content') || 
+                    $a('main time', 'datetime') || 
+                    $e('main time') || 
                     result.modified;
 
     // Respond
