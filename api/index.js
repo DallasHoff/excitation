@@ -4,13 +4,18 @@ const cheerio = require('cheerio');
 const app = express();
 const port = 3000;
 
+// Wrapper to catch errors in async routes
+let wrap = fn => (...args) => fn(...args).catch(args[2]);
+
+
+
 // Test endpoint
 app.get('/test', (req, res) => {
     return res.json({message: 'Hello from Excitation!'});
 });
 
 // Cite web page
-app.get('/cite/webpage', async (req, res) => {
+app.get('/cite/webpage', wrap(async (req, res) => {
     var result = {};
 
     // URL to cite
@@ -37,7 +42,7 @@ app.get('/cite/webpage', async (req, res) => {
     var $e = (selector) => $(selector).first().text()?.trim() || null;
     var $a = (selector, attribute) => $(selector).first().attr(attribute)?.trim() || null;
     var $meta = (name) => $a(`meta[name="${name}"]`, 'content') || $a(`meta[property="${name}"]`, 'content') || null;
-
+    
     result.title = $meta('og:title') || 
                     $e('head title');
     result.author = $meta('author') || 
@@ -53,7 +58,9 @@ app.get('/cite/webpage', async (req, res) => {
 
     // Respond
     return res.status(200).json(result);
-});
+}));
+
+
 
 // Handle 404's
 app.use((req, res, next) => {
@@ -62,6 +69,7 @@ app.use((req, res, next) => {
 
 // Handle errors
 app.use((err, req, res, next) => {
+    console.error(err);
     return res.status(500).json({error: 'A server error occurred. Please try again.'});
 });
 
