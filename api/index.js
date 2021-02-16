@@ -61,14 +61,17 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     
     result.url = $attr('link[rel="canonical"]', 'href') || 
                     url;
-    result.title = $meta('og:title') || 
+    result.title = $meta('citation_title') || 
+                    $meta('og:title') || 
                     $meta('twitter:title') || 
                     $meta('pagename') || 
                     $elem('head title');
-    result.authors = $meta('author', true) || 
+    result.authors = $meta('citation_author', true) || 
+                    $meta('author', true) || 
                     $elem('[rel="author"]', true) || 
                     $meta('web_author', true);
-    result.publication = $meta('og:site_name') || 
+    result.publication = $meta('citation_journal_title') || 
+                    $meta('og:site_name') || 
                     $meta('application-name') || 
                     $meta('apple-mobile-web-app-title') || 
                     $meta('copyright') || 
@@ -79,7 +82,9 @@ app.get('/cite/webpage', wrap(async (req, res) => {
                     $attr('meta[http-equiv="Last-Modified"]', 'content') || 
                     $attr('main time', 'datetime') || 
                     $elem('main time');
-    result.publishedTime = $meta('article:published_time') || 
+    result.publishedTime = $meta('citation_publication_date') || 
+                    $meta('citation_date') || 
+                    $meta('article:published_time') || 
                     $meta('creation_date') || 
                     $meta('created') || 
                     $attr('meta[http-equiv="date"]', 'content') || 
