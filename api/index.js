@@ -43,13 +43,14 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     var $a = (selector, attribute) => $(selector).first().attr(attribute)?.replace(/\s+/g, ' ') || null;
     var $meta = (name) => $a(`meta[name="${name}"]`, 'content') || $a(`meta[property="${name}"]`, 'content') || null;
     
+    result.url = url;
     result.title = $meta('og:title') || 
                     $meta('pagename') || 
                     $e('head title');
     result.author = $meta('author') || 
                     $e('[rel="author"]') || 
                     $meta('web_author');
-    result.publisher = $meta('og:site_name') || 
+    result.publication = $meta('og:site_name') || 
                     $meta('application-name') || 
                     $meta('copyright') || 
                     $meta('owner');
