@@ -14,7 +14,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     var result = {};
 
     // URL to cite
-    var q = req.query.q;
+    var q = Array.isArray(req.query.q) ? req.query.q[0] : req.query.q;
     if (!q) return res.status(400).json({error: 'No URL was provided.'});
 
     // Make sure URL has protocol
