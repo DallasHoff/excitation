@@ -9,11 +9,6 @@ let wrap = fn => (...args) => fn(...args).catch(args[2]);
 
 
 
-// Test endpoint
-app.get('/test', (req, res) => {
-    return res.json({message: 'Hello from Excitation!'});
-});
-
 // Cite web page
 app.get('/cite/webpage', wrap(async (req, res) => {
     var result = {};
