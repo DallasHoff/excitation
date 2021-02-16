@@ -33,7 +33,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
         return res.status(400).json({error: 'The URL provided does not lead to a valid web page.'});
     }
 
-    // Extract citation info (TODO)
+    // Extract citation info
     var clean = (text) => text?.replace(/\s+/g, ' ')?.trim();
     var $elem = (selector, multi) => {
         if (multi) {
@@ -78,8 +78,6 @@ app.get('/cite/webpage', wrap(async (req, res) => {
                     $meta('owner');
     result.modifiedTime = $meta('article:modified_time') || 
                     $meta('revised') || 
-                    $attr('meta[http-equiv="last-modified"]', 'content') || 
-                    $attr('meta[http-equiv="Last-Modified"]', 'content') || 
                     $attr('main time', 'datetime') || 
                     $elem('main time');
     result.publishedTime = $meta('citation_publication_date') || 
@@ -87,8 +85,6 @@ app.get('/cite/webpage', wrap(async (req, res) => {
                     $meta('article:published_time') || 
                     $meta('creation_date') || 
                     $meta('created') || 
-                    $attr('meta[http-equiv="date"]', 'content') || 
-                    $attr('meta[http-equiv="Date"]', 'content') || 
                     $attr('main time', 'datetime') || 
                     $elem('main time') || 
                     result.modified;
