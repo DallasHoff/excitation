@@ -34,30 +34,52 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     }
 
     // Extract citation info (TODO)
-    var $elem = (selector) => $(selector).first().text()?.replace(/\s+/g, ' ')?.trim() || null;
-    var $attr = (selector, attribute) => $(selector).first().attr(attribute)?.replace(/\s+/g, ' ')?.trim() || null;
-    var $meta = (name) => $attr(`meta[name="${name}"]`, 'content') || $attr(`meta[property="${name}"]`, 'content') || null;
+    var clean = (text) => text?.replace(/\s+/g, ' ')?.trim();
+    var $elem = (selector, multi) => {
+        if (multi) {
+            var results = [];
+            $(selector).each((i, el) => {
+                var text = $(el).text();
+                results.push(clean(text));
+            });
+            return results.length > 0 ? results : null;
+        }
+        return clean($(selector).first().text()) || null;
+    }
+    var $attr = (selector, attribute, multi) => {
+        if (multi) {
+            var results = [];
+            $(selector).each((i, el) => {
+                var text = $(el).attr(attribute);
+                results.push(clean(text));
+            });
+            return results.length > 0 ? results : null;
+        }
+        return clean($(selector).first().attr(attribute)) || null;
+    }
+    var $meta = (name, multi) => $attr(`meta[name="${name}"]`, 'content', multi) || $attr(`meta[property="${name}"]`, 'content', multi);
     
-    result.url = url;
+    result.url = $attr('link[rel="canonical"]', 'href') || 
+                    url;
     result.title = $meta('og:title') || 
                     $meta('twitter:title') || 
                     $meta('pagename') || 
                     $elem('head title');
-    result.author = $meta('author') || 
-                    $elem('[rel="author"]') || 
-                    $meta('web_author');
+    result.authors = $meta('author', true) || 
+                    $elem('[rel="author"]', true) || 
+                    $meta('web_author', true);
     result.publication = $meta('og:site_name') || 
                     $meta('application-name') || 
                     $meta('apple-mobile-web-app-title') || 
                     $meta('copyright') || 
                     $meta('owner');
-    result.modified = $meta('article:modified_time') || 
+    result.modifiedTime = $meta('article:modified_time') || 
                     $meta('revised') || 
                     $attr('meta[http-equiv="last-modified"]', 'content') || 
                     $attr('meta[http-equiv="Last-Modified"]', 'content') || 
                     $attr('main time', 'datetime') || 
                     $elem('main time');
-    result.published = $meta('article:published_time') || 
+    result.publishedTime = $meta('article:published_time') || 
                     $meta('creation_date') || 
                     $meta('created') || 
                     $attr('meta[http-equiv="date"]', 'content') || 
