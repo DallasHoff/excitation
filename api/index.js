@@ -39,16 +39,16 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     }
 
     // Extract citation info (TODO)
-    var $e = (selector) => $(selector).first().text()?.replace(/\s+/g, ' ') || null;
-    var $a = (selector, attribute) => $(selector).first().attr(attribute)?.replace(/\s+/g, ' ') || null;
-    var $meta = (name) => $a(`meta[name="${name}"]`, 'content') || $a(`meta[property="${name}"]`, 'content') || null;
+    var $elem = (selector) => $(selector).first().text()?.replace(/\s+/g, ' ')?.trim() || null;
+    var $attr = (selector, attribute) => $(selector).first().attr(attribute)?.replace(/\s+/g, ' ')?.trim() || null;
+    var $meta = (name) => $attr(`meta[name="${name}"]`, 'content') || $attr(`meta[property="${name}"]`, 'content') || null;
     
     result.url = url;
     result.title = $meta('og:title') || 
                     $meta('pagename') || 
-                    $e('head title');
+                    $elem('head title');
     result.author = $meta('author') || 
-                    $e('[rel="author"]') || 
+                    $elem('[rel="author"]') || 
                     $meta('web_author');
     result.publication = $meta('og:site_name') || 
                     $meta('application-name') || 
@@ -56,17 +56,17 @@ app.get('/cite/webpage', wrap(async (req, res) => {
                     $meta('owner');
     result.modified = $meta('article:modified_time') || 
                     $meta('revised') || 
-                    $a('meta[http-equiv="last-modified"]', 'content') || 
-                    $a('meta[http-equiv="Last-Modified"]', 'content') || 
-                    $a('main time', 'datetime') || 
-                    $e('main time');
+                    $attr('meta[http-equiv="last-modified"]', 'content') || 
+                    $attr('meta[http-equiv="Last-Modified"]', 'content') || 
+                    $attr('main time', 'datetime') || 
+                    $elem('main time');
     result.published = $meta('article:published_time') || 
                     $meta('creation_date') || 
                     $meta('created') || 
-                    $a('meta[http-equiv="date"]', 'content') || 
-                    $a('meta[http-equiv="Date"]', 'content') || 
-                    $a('main time', 'datetime') || 
-                    $e('main time') || 
+                    $attr('meta[http-equiv="date"]', 'content') || 
+                    $attr('meta[http-equiv="Date"]', 'content') || 
+                    $attr('main time', 'datetime') || 
+                    $elem('main time') || 
                     result.modified;
 
     // Respond
