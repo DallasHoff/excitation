@@ -39,8 +39,8 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     }
 
     // Extract citation info (TODO)
-    var $e = (selector) => $(selector).first().text()?.trim() || null;
-    var $a = (selector, attribute) => $(selector).first().attr(attribute)?.trim() || null;
+    var $e = (selector) => $(selector).first().text()?.replace(/\s+/g, ' ') || null;
+    var $a = (selector, attribute) => $(selector).first().attr(attribute)?.replace(/\s+/g, ' ') || null;
     var $meta = (name) => $a(`meta[name="${name}"]`, 'content') || $a(`meta[property="${name}"]`, 'content') || null;
     
     result.title = $meta('og:title') || 
