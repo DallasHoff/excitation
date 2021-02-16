@@ -12,7 +12,7 @@
     "url": "git+https://github.com/DallasHoff/excitation.git"
   },
   "author": "Dallas Hoffman",
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0-only",
   "bugs": {
     "url": "https://github.com/DallasHoff/excitation/issues"
   },
