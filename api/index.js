@@ -40,6 +40,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     
     result.url = url;
     result.title = $meta('og:title') || 
+                    $meta('twitter:title') || 
                     $meta('pagename') || 
                     $elem('head title');
     result.author = $meta('author') || 
@@ -47,6 +48,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
                     $meta('web_author');
     result.publication = $meta('og:site_name') || 
                     $meta('application-name') || 
+                    $meta('apple-mobile-web-app-title') || 
                     $meta('copyright') || 
                     $meta('owner');
     result.modified = $meta('article:modified_time') || 
