@@ -107,6 +107,33 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     return res.status(200).json(result);
 }));
 
+// Cite book
+app.get('/cite/book', wrap(async (req, res) => {
+    var result = {};
+
+    // Search book by
+    const canSearchBy = {
+        title: 'intitle',
+        isbn: 'isbn',
+        lccn: 'lccn',
+        oclc: 'oclc'
+    };
+    var searchBy = Array.isArray(req.query.by) ? req.query.by[0] : req.query.by;
+    if (!(searchBy in canSearchBy)) searchBy = 'title';
+
+    // Search term
+    var q = Array.isArray(req.query.q) ? req.query.q[0] : req.query.q;
+    q = q.replace(/\:/g, '');
+    if (!q) return res.status(400).json({error: 'No search term was provided.'});
+
+    // Do search with Google Books API
+    const fetchFields = 'items(volumeInfo(title,authors,publisher,publishedDate,industryIdentifiers,printType))';
+    // TODO
+
+    // Respond
+    return res.status(200).json(result);
+}));
+
 
 
 // Handle 404's
