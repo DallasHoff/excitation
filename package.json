@@ -1,0 +1,27 @@
+{
+  "name": "excitation",
+  "version": "0.0.1",
+  "description": "An app that helps users generate citations for papers, articles, and other academic documents",
+  "scripts": {
+    "api-start": "cd api && npm run start",
+    "api-dev": "cd api && npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DallasHoff/excitation.git"
+  },
+  "keywords": [
+    "citations",
+    "essays",
+    "references",
+    "papers",
+    "articles",
+    "citation-generator"
+  ],
+  "author": "Dallas Hoffman",
+  "license": "AGPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/DallasHoff/excitation/issues"
+  },
+  "homepage": "https://github.com/DallasHoff/excitation#readme"
+}
