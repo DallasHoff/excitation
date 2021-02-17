@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
+const parseFullName = require('parse-full-name').parseFullName;
 const app = express();
 const port = 3000;
 
@@ -96,6 +97,11 @@ app.get('/cite/webpage', wrap(async (req, res) => {
                     $attr('main time', 'datetime') || 
                     $elem('main time') || 
                     result.modifiedTime;
+
+    // Standardize field formats
+    if (result.authors !== null) result.authors = result.authors.map(v => parseFullName(v));
+    if (result.modifiedTime !== null) result.modifiedTime = new Date(result.modifiedTime);
+    if (result.publishedTime !== null) result.publishedTime = new Date(result.publishedTime);
 
     // Respond
     return res.status(200).json(result);
