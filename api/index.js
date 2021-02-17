@@ -5,7 +5,7 @@ const app = express();
 const port = 3000;
 
 // Wrapper to catch errors in async routes
-let wrap = fn => (...args) => fn(...args).catch(args[2]);
+const wrap = fn => (...args) => fn(...args).catch(args[2]);
 
 
 
@@ -39,8 +39,8 @@ app.get('/cite/webpage', wrap(async (req, res) => {
         if (multi) {
             var results = [];
             $(selector).each((i, el) => {
-                var text = $(el).text();
-                results.push(clean(text));
+                var text = clean($(el).text());
+                if (text) results.push(text);
             });
             return results.length > 0 ? results : null;
         }
@@ -50,8 +50,8 @@ app.get('/cite/webpage', wrap(async (req, res) => {
         if (multi) {
             var results = [];
             $(selector).each((i, el) => {
-                var text = $(el).attr(attribute);
-                results.push(clean(text));
+                var text = clean($(el).attr(attribute));
+                if (text) results.push(text);
             });
             return results.length > 0 ? results : null;
         }
@@ -68,6 +68,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
                     $elem('head title');
     result.authors = $meta('citation_author', true) || 
                     $meta('author', true) || 
+                    $meta('article:author') || 
                     $elem('[rel="author"]', true) || 
                     $meta('web_author', true);
     result.publication = $meta('citation_journal_title') || 
@@ -77,17 +78,24 @@ app.get('/cite/webpage', wrap(async (req, res) => {
                     $meta('copyright') || 
                     $meta('owner');
     result.modifiedTime = $meta('article:modified_time') || 
+                    $meta('article:modified') || 
+                    $meta('lastmod') || 
+                    $meta('og:lastmod') || 
                     $meta('revised') || 
                     $attr('main time', 'datetime') || 
                     $elem('main time');
     result.publishedTime = $meta('citation_publication_date') || 
                     $meta('citation_date') || 
                     $meta('article:published_time') || 
+                    $meta('article:published') || 
+                    $meta('pubdate') || 
+                    $meta('og:pubdate') || 
+                    $attr('time[pubdate]', 'datetime') || 
                     $meta('creation_date') || 
                     $meta('created') || 
                     $attr('main time', 'datetime') || 
                     $elem('main time') || 
-                    result.modified;
+                    result.modifiedTime;
 
     // Respond
     return res.status(200).json(result);
