@@ -1,9 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
 const parseFullName = require('parse-full-name').parseFullName;
 const app = express();
-const port = 3000;
+const port = process.env.EXPRESS_PORT;
 
 // Wrapper to catch errors in async routes
 const wrap = fn => (...args) => fn(...args).catch(args[2]);
@@ -12,6 +13,7 @@ const wrap = fn => (...args) => fn(...args).catch(args[2]);
 
 // Cite web page
 app.get('/cite/webpage', wrap(async (req, res) => {
+    var results = [];
     var result = {};
 
     // URL to cite
@@ -38,23 +40,23 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     var clean = (text) => text?.replace(/\s+/g, ' ')?.trim();
     var $elem = (selector, multi) => {
         if (multi) {
-            var results = [];
+            var hits = [];
             $(selector).each((i, el) => {
                 var text = clean($(el).text());
-                if (text) results.push(text);
+                if (text) hits.push(text);
             });
-            return results.length > 0 ? results : null;
+            return hits.length > 0 ? hits : null;
         }
         return clean($(selector).first().text()) || null;
     }
     var $attr = (selector, attribute, multi) => {
         if (multi) {
-            var results = [];
+            var hits = [];
             $(selector).each((i, el) => {
                 var text = clean($(el).attr(attribute));
-                if (text) results.push(text);
+                if (text) hits.push(text);
             });
-            return results.length > 0 ? results : null;
+            return hits.length > 0 ? hits : null;
         }
         return clean($(selector).first().attr(attribute)) || null;
     }
@@ -97,6 +99,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
                     $attr('main time', 'datetime') || 
                     $elem('main time') || 
                     result.modifiedTime;
+    result.isbn = $meta('citation_isbn', true);
 
     // Standardize field formats
     if (result.authors !== null) result.authors = result.authors.map(v => parseFullName(v));
@@ -104,34 +107,50 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     if (result.publishedTime !== null) result.publishedTime = new Date(result.publishedTime);
 
     // Respond
-    return res.status(200).json(result);
+    results.push(result);
+    return res.status(200).json(results);
 }));
+
 
 // Cite book
 app.get('/cite/book', wrap(async (req, res) => {
-    var result = {};
+    var results = [];
 
-    // Search book by
-    const canSearchBy = {
-        title: 'intitle',
-        isbn: 'isbn',
-        lccn: 'lccn',
-        oclc: 'oclc'
-    };
-    var searchBy = Array.isArray(req.query.by) ? req.query.by[0] : req.query.by;
-    if (!(searchBy in canSearchBy)) searchBy = 'title';
-
-    // Search term
+    // Search term for book
     var q = Array.isArray(req.query.q) ? req.query.q[0] : req.query.q;
-    q = q.replace(/\:/g, '');
+    q = encodeURIComponent(q);
     if (!q) return res.status(400).json({error: 'No search term was provided.'});
 
     // Do search with Google Books API
+    const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
     const fetchFields = 'items(volumeInfo(title,authors,publisher,publishedDate,industryIdentifiers,printType))';
-    // TODO
+    const searchUrl = `https://www.googleapis.com/books/v1/volumes?key=${apiKey}&q=${q}&fields=${fetchFields}`;
+
+    try {
+        var {data: {items: books}} = await axios.get(searchUrl);
+    } catch (err) {
+        return res.status(502).json({error: 'An error occurred with your search. Please try again.'});
+    }
+
+    if (!books) return res.status(200).json([]);
+
+    // Standardize field formats
+    results = books.map?.(b => {
+        var result = {};
+        var info = b.volumeInfo;
+
+        result.title = info.title || null;
+        result.authors = info?.authors?.map(a => parseFullName(a)) || null;
+        result.publisher = info.publisher || null;
+        result.publishedTime = info.publishedDate ? new Date(info.publishedDate) : null;
+        result.isbn = info?.industryIdentifiers?.filter(v => v?.type?.toLowerCase().includes('isbn') || false).map(v => v.identifier) || null;
+        result.printType = info?.printType?.toLowerCase() || null;
+
+        return result;
+    });
 
     // Respond
-    return res.status(200).json(result);
+    return res.status(200).json(results || []);
 }));
 
 
