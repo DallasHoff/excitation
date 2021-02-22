@@ -66,7 +66,25 @@ app.get('/cite/webpage', wrap(async (req, res) => {
         return clean($(selector).first().attr(attribute)) || null;
     }
     var $meta = (name, multi) => $attr(`meta[name="${name}"]`, 'content', multi) || $attr(`meta[property="${name}"]`, 'content', multi);
+
+    // Schema.org metadata
+    var schemas = [];
+    // Collect JSON-LD
+    $('script[type="application/ld+json"]').each((i, el) => {
+        var schemaJSON = null;
+        try {
+            schemaJSON = JSON.parse($(el).html());
+        } catch (err) {}
+        if (schemaJSON?.['@context']?.match(/^https?:\/\/schema.org/)) {
+            schemas.push(schemaJSON);
+        }
+    });
+    // Collect microdata
+    $('[itemscope]').each((i, el) => {
+        // TODO
+    });
     
+    // Choose citation info by priority
     result.url = (
         $attr('link[rel="canonical"]', 'href') || 
         url
