@@ -75,7 +75,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
         try {
             schemaJSON = JSON.parse($(el).html());
         } catch (err) {}
-        if (schemaJSON?.['@context']?.match(/^https?:\/\/schema.org/)) {
+        if (schemaJSON?.['@context']?.match(/^https?:\/\/schema\.org/)) {
             schemas.push(schemaJSON);
         }
     });
