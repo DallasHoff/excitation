@@ -124,6 +124,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     if (result.authors !== null) result.authors = result.authors.map(v => parseFullName(v));
     if (result.modifiedTime !== null) result.modifiedTime = new Date(result.modifiedTime);
     if (result.publishedTime !== null) result.publishedTime = new Date(result.publishedTime);
+    result.formatType = 'webpage';
 
     // Respond
     results.push(result);
@@ -174,7 +175,7 @@ app.get('/cite/book', wrap(async (req, res) => {
         result.publisher = info.publisher || null;
         result.publishedTime = info.publishedDate ? new Date(info.publishedDate) : null;
         result.isbn = collectIdentifiers('isbn');
-        result.printType = info?.printType?.toLowerCase() || null;
+        result.formatType = info?.printType?.toLowerCase() || null;
 
         return result;
     });
