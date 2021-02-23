@@ -42,7 +42,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     }
 
     // Extract citation info
-    var clean = (text) => text?.replace(/\s+/g, ' ')?.trim();
+    var clean = (text) => text?.replace?.(/\s+/g, ' ')?.trim();
     var $elem = (selector, multi) => {
         if (multi) {
             var hits = [];
@@ -80,8 +80,35 @@ app.get('/cite/webpage', wrap(async (req, res) => {
         }
     });
     // Collect microdata
-    $('[itemscope]').each((i, el) => {
-        // TODO
+    const itemSelector = '[itemscope][itemtype]';
+    $(itemSelector).each((i, el) => {
+        var item = {};
+        var itemtypeUrl = $(el).attr('itemtype');
+        var [match, context, type] = itemtypeUrl?.match?.(/^(https?:\/\/schema\.org)\/(\w+)/);
+        if (context && type) {
+            item['@context'] = context;
+            item['@type'] = type;
+            $('[itemprop]', el).each((i, el) => {
+                var prop = $(el).attr('itemprop');
+                var propvalue = (
+                    clean($(el).attr('content')) || 
+                    clean($(el).text()) || 
+                    true
+                );
+                var isInNestedItem = $(el).parents(itemSelector).first().attr('itemtype') !== itemtypeUrl;
+                var isNestedItem = $(el).is(itemSelector);
+                if (isInNestedItem || isNestedItem) return; // continue
+                if (item[prop]) {
+                    if (!Array.isArray(item[prop])) {
+                        item[prop] = [item[prop]];
+                    }
+                    item[prop].push(propvalue);
+                } else {
+                    item[prop] = propvalue;
+                }
+            });
+            schemas.push(item);
+        }
     });
     
     // Choose citation info by priority
