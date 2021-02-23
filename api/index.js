@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
+const crc32 = require('crc32');
 const parseFullName = require('parse-full-name').parseFullName;
 
 const app = express();
@@ -83,21 +84,35 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     const itemSelector = '[itemscope][itemtype]';
     $(itemSelector).each((i, el) => {
         var item = {};
+        var itemprop = $(el).attr('itemprop');
         var itemtypeUrl = $(el).attr('itemtype');
-        var [match, context, type] = itemtypeUrl?.match?.(/^(https?:\/\/schema\.org)\/(\w+)/);
+        var parentItem = $(el).parents(itemSelector).first();
+        var [match, context, type] = itemtypeUrl?.match?.(/^(https?:\/\/schema\.org)\/(\w+)/) || [];
+        // Only use items with schema.org vocabulary and type defined
         if (context && type) {
             item['@context'] = context;
             item['@type'] = type;
+            // Info for reconstructing item hierarchy
+            item['$itemProp'] = itemprop;
+            item['$itemKey'] = crc32($(el).html());
+            item['$parentItemKey'] = crc32(parentItem.html());
+            // Collect item's properties
             $('[itemprop]', el).each((i, el) => {
                 var prop = $(el).attr('itemprop');
+                // Make sure property belongs to the current scope
+                var parentItem = $(el).parents(itemSelector).first();
+                var isInNestedItem = parentItem.attr('itemtype') !== itemtypeUrl;
+                var isNestedItem = $(el).is(itemSelector);
+                if (isInNestedItem || isNestedItem) return; // continue
+                // Collect property value
                 var propvalue = (
-                    clean($(el).attr('content')) || 
+                    ($(el).is('time') ? clean($(el).attr('datetime')) : null) || 
+                    ($(el).is('meta') ? clean($(el).attr('content')) : null) || 
+                    (prop === 'url' ? clean($(el).attr('href')) : null) || 
                     clean($(el).text()) || 
                     true
                 );
-                var isInNestedItem = $(el).parents(itemSelector).first().attr('itemtype') !== itemtypeUrl;
-                var isNestedItem = $(el).is(itemSelector);
-                if (isInNestedItem || isNestedItem) return; // continue
+                // Use array for repeated properties
                 if (item[prop]) {
                     if (!Array.isArray(item[prop])) {
                         item[prop] = [item[prop]];
@@ -107,6 +122,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
                     item[prop] = propvalue;
                 }
             });
+            // Add item to collection of schema info
             schemas.push(item);
         }
     });
