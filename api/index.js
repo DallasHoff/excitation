@@ -80,8 +80,11 @@ app.get('/cite/webpage', wrap(async (req, res) => {
             schemas.push(schemaJSON);
         }
     });
-    // Collect microdata
+
+    // Schema.org microdata
+    var microdata = [];
     const itemSelector = '[itemscope][itemtype]';
+    // Collect each microdata item
     $(itemSelector).each((i, el) => {
         var item = {};
         var itemprop = $(el).attr('itemprop');
@@ -122,10 +125,43 @@ app.get('/cite/webpage', wrap(async (req, res) => {
                     item[prop] = propvalue;
                 }
             });
-            // Add item to collection of schema info
-            schemas.push(item);
+            // Add item to collection of microdata info
+            microdata.push(item);
         }
     });
+    // Reconstruct microdata item hierarchy
+    var microdataTrees = [];
+    var findChildItems = (parentKey, searchBranch) => {
+        // Find children of this item
+        microdata.map(item => {
+            var itemParentKey = item?.['$parentItemKey'];
+            var itemKey = item?.['$itemKey'];
+            var itemProp = item?.['$itemProp'];
+            if (itemParentKey === parentKey) {
+                // Move item to its parent and recursively find child items
+                if (itemParentKey === '0') {
+                    microdataTrees.push(item);
+                    if (itemKey && itemKey !== '0') findChildItems(itemKey, microdataTrees);
+                } else {
+                    var branchIndex = null;
+                    searchBranch = searchBranch.map((branch, index) => {
+                        if (itemParentKey === branch?.['$itemKey'] && itemProp) {
+                            delete item['@context'];
+                            branch[itemProp] = item;
+                            branchIndex = index;
+                        }
+                        return branch;
+                    });
+                    // TODO: not working for items 2 or more than levels down
+                    if (itemKey && itemKey !== '0' && branchIndex) findChildItems(itemKey, searchBranch[branchIndex]);
+                }
+            }
+        });
+    }
+    // Start from items with no parents
+    findChildItems('0');
+    // Add microdata info to schemas
+    schemas = [...schemas, ...microdataTrees];
     
     // Choose citation info by priority
     result.url = (
