@@ -111,7 +111,8 @@ app.get('/cite/webpage', wrap(async (req, res) => {
                 var propvalue = (
                     ($(el).is('time') ? clean($(el).attr('datetime')) : null) || 
                     ($(el).is('meta') ? clean($(el).attr('content')) : null) || 
-                    (prop === 'url' ? clean($(el).attr('href')) : null) || 
+                    ($(el).is('link') ? clean($(el).attr('href')) : null) || 
+                    ($(el).is('img') ? clean($(el).attr('src')) : null) || 
                     clean($(el).text()) || 
                     true
                 );
