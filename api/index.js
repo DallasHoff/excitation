@@ -142,24 +142,36 @@ app.get('/cite/webpage', wrap(async (req, res) => {
                 if (itemParentKey === '0') {
                     microdataTrees.push(item);
                     if (itemKey && itemKey !== '0') findChildItems(itemKey, microdataTrees);
-                } else {
-                    var branchIndex = null;
-                    searchBranch = searchBranch.map((branch, index) => {
-                        if (itemParentKey === branch?.['$itemKey'] && itemProp) {
-                            delete item['@context'];
-                            branch[itemProp] = item;
-                            branchIndex = index;
+                } else if (searchBranch) {
+                    var parentBranch = null;
+                    for (var i in searchBranch) {
+                        parentBranch = searchBranch[i];
+                        if (Array.isArray(parentBranch)) {
+                            var multiItemIndex = parentBranch.findIndex(a => itemParentKey === a?.['$itemKey']);
+                            if (multiItemIndex < 0) continue; 
+                            parentBranch = searchBranch[i][multiItemIndex];
                         }
-                        return branch;
-                    });
-                    // TODO: not working for items 2 or more than levels down
-                    if (itemKey && itemKey !== '0' && branchIndex) findChildItems(itemKey, searchBranch[branchIndex]);
+                        if (itemParentKey === parentBranch?.['$itemKey'] && itemProp) {
+                            delete item['@context'];
+                            // Use array for repeated properties
+                            if (parentBranch[itemProp]) {
+                                if (!Array.isArray(parentBranch[itemProp])) {
+                                    parentBranch[itemProp] = [parentBranch[itemProp]];
+                                }
+                                parentBranch[itemProp].push(item);
+                            } else {
+                                parentBranch[itemProp] = item;
+                            }
+                            break;
+                        }
+                    }
+                    if (itemKey && itemKey !== '0' && parentBranch) findChildItems(itemKey, parentBranch);
                 }
             }
         });
     }
     // Start from items with no parents
-    findChildItems('0');
+    findChildItems('0', null);
     // Add microdata info to schemas
     schemas = [...schemas, ...microdataTrees];
     
