@@ -81,16 +81,26 @@ app.get('/cite/webpage', wrap(async (req, res) => {
         }
     });
 
-    // Schema.org microdata
+    // Schema.org microdata and RDFa
     var microdata = [];
-    const itemSelector = '[itemscope][itemtype]';
-    // Collect each microdata item
+    const itemSelector = '[itemscope][itemtype], [typeof]';
+    const propSelector = '[itemprop], [property]';
+    // Collect each microdata/RDFa item
     $(itemSelector).each((i, el) => {
         var item = {};
-        var itemprop = $(el).attr('itemprop');
-        var itemtypeUrl = $(el).attr('itemtype');
         var parentItem = $(el).parents(itemSelector).first();
-        var [match, context, type] = itemtypeUrl?.match?.(/^(https?:\/\/schema\.org)\/(\w+)/) || [];
+        if ($(el).is('[itemscope][itemtype]')) {
+            // Microdata
+            var itemprop = $(el).attr('itemprop');
+            var itemtypeRef = $(el).attr('itemtype');
+            var [match, context, type] = itemtypeRef?.match?.(/^(https?:\/\/schema\.org)\/(\w+)/) || [];
+        } else if ($(el).is('[typeof]')) {
+            // RDFa
+            var itemprop = $(el).attr('property');
+            var itemtypeRef = $(el).attr('typeof');
+            var type = $(el).attr('typeof');
+            var [match, context] = ($(el).attr('vocab') || $(el).parents('[vocab]').first().attr('vocab'))?.match?.(/^(https?:\/\/schema\.org)/) || [];
+        }
         // Only use items with schema.org vocabulary and type defined
         if (context && type) {
             item['@context'] = context;
@@ -100,19 +110,19 @@ app.get('/cite/webpage', wrap(async (req, res) => {
             item['$itemKey'] = crc32($(el).html());
             item['$parentItemKey'] = crc32(parentItem.html());
             // Collect item's properties
-            $('[itemprop]', el).each((i, el) => {
-                var prop = $(el).attr('itemprop');
+            $(propSelector, el).each((i, el) => {
+                var prop = $(el).attr('itemprop') || $(el).attr('property');
                 // Make sure property belongs to the current scope
                 var parentItem = $(el).parents(itemSelector).first();
-                var isInNestedItem = parentItem.attr('itemtype') !== itemtypeUrl;
+                var isInNestedItem = (parentItem.attr('itemtype') || parentItem.attr('typeof')) !== itemtypeRef;
                 var isNestedItem = $(el).is(itemSelector);
                 if (isInNestedItem || isNestedItem) return; // continue
                 // Collect property value
                 var propvalue = (
                     ($(el).is('time') ? clean($(el).attr('datetime')) : null) || 
-                    ($(el).is('meta') ? clean($(el).attr('content')) : null) || 
                     ($(el).is('link') ? clean($(el).attr('href')) : null) || 
                     ($(el).is('img') ? clean($(el).attr('src')) : null) || 
+                    clean($(el).attr('content')) || 
                     clean($(el).text()) || 
                     true
                 );
@@ -130,7 +140,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
             microdata.push(item);
         }
     });
-    // Reconstruct microdata item hierarchy
+    // Reconstruct item hierarchy
     var microdataTrees = [];
     var findChildItems = (parentKey, searchBranch) => {
         // Find children of this item
@@ -173,7 +183,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     }
     // Start from items with no parents
     findChildItems('0', null);
-    // Add microdata info to schemas
+    // Add item info to schemas
     schemas = [...schemas, ...microdataTrees];
     
     // Choose citation info by priority
