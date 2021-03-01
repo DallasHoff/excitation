@@ -49,11 +49,21 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     // Collect JSON-LD
     $('script[type="application/ld+json"]').each((i, el) => {
         var schemaJSON = null;
+        var schemaContext = null;
         try {
             schemaJSON = JSON.parse($(el).html());
+            [schemaContext] = schemaJSON?.['@context']?.match(/^https?:\/\/schema\.org/) || [];
         } catch (err) {}
-        if (schemaJSON?.['@context']?.match(/^https?:\/\/schema\.org/)) {
-            schemas.push(schemaJSON);
+        if (schemaJSON && schemaContext) {
+            if (Array.isArray(schemaJSON?.['@graph'])) {
+                // Split array of multiple schemas
+                schemaJSON['@graph'].map(graphSchemaJSON => {
+                    graphSchemaJSON['@context'] = schemaContext;
+                    schemas.push(graphSchemaJSON);
+                });
+            } else {
+                schemas.push(schemaJSON);
+            }
         }
     });
 
