@@ -8,7 +8,6 @@ const parseFullName = require('parse-full-name').parseFullName;
 const app = express();
 const port = process.env.EXPRESS_PORT;
 
-
 // Wrapper to catch errors in async routes
 const wrap = fn => (...args) => fn(...args).catch(args[2]);
 
@@ -42,31 +41,8 @@ app.get('/cite/webpage', wrap(async (req, res) => {
         return res.status(400).json({error: 'The URL provided does not lead to a valid web page.'});
     }
 
-    // Extract citation info
+    // Begin extracting citation info
     var clean = (text) => text?.replace?.(/\s+/g, ' ')?.trim();
-    var $elem = (selector, multi) => {
-        if (multi) {
-            var hits = [];
-            $(selector).each((i, el) => {
-                var text = clean($(el).text());
-                if (text) hits.push(text);
-            });
-            return hits.length > 0 ? hits : null;
-        }
-        return clean($(selector).first().text()) || null;
-    }
-    var $attr = (selector, attribute, multi) => {
-        if (multi) {
-            var hits = [];
-            $(selector).each((i, el) => {
-                var text = clean($(el).attr(attribute));
-                if (text) hits.push(text);
-            });
-            return hits.length > 0 ? hits : null;
-        }
-        return clean($(selector).first().attr(attribute)) || null;
-    }
-    var $meta = (name, multi) => $attr(`meta[name="${name}"]`, 'content', multi) || $attr(`meta[property="${name}"]`, 'content', multi);
 
     // Schema.org metadata
     var schemas = [];
@@ -140,7 +116,8 @@ app.get('/cite/webpage', wrap(async (req, res) => {
             microdata.push(item);
         }
     });
-    // Reconstruct item hierarchy
+
+    // Reconstruct schema item hierarchy
     var microdataTrees = [];
     var findChildItems = (parentKey, searchBranch) => {
         // Find children of this item
@@ -183,10 +160,52 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     }
     // Start from items with no parents
     findChildItems('0', null);
-    // Add item info to schemas
+
+    // Add schema item info, now formatted like JSON-LD, to schemas collection
     schemas = [...schemas, ...microdataTrees];
-    
+
+    // Choose main Schema.org schema
+    var mainSchema = {};
+    // Schema types ordered by priority
+    const recognizedTypes = ['WebPage', 'Article', 'ScholarlyArticle', 'MedicalScholarlyArticle', 'NewsArticle', 'TechArticle', 'AnalysisNewsArticle', 'ReportageNewsArticle', 'ReviewNewsArticle', 'AskPublicNewsArticle', 'BackgroundNewsArticle', 'OpinionNewsArticle', 'Thesis', 'BlogPosting', 'LiveBlogPosting', 'AboutPage', 'ProfilePage', 'ContactPage', 'FAQPage', 'ItemPage', 'MedicalWebPage', 'QAPage', 'Report', 'Guide', 'HowTo', 'Review', 'ClaimReview', 'CriticReview', 'MediaReview', 'EmployerReview', 'SocialMediaPosting', 'WebContent', 'HealthTopicContent', 'LearningResource', 'Course', 'AmpStory', 'Recipe', 'RealEstateListing', 'Recommendation', 'Quotation', 'UserReview', 'Blog', 'WebSite', 'CreativeWork'];
+    // Choose by priority and order on page
+    for (var type of recognizedTypes) {
+        var schemaChosen = false;
+        for (var schema of schemas) {
+            if (schema['@type'] === type) {
+                mainSchema = schema;
+                schemaChosen = true;
+                break;
+            }
+        }
+        if (schemaChosen === true) break;
+    }
+
     // Choose citation info by priority
+    var $elem = (selector, multi) => {
+        if (multi) {
+            var hits = [];
+            $(selector).each((i, el) => {
+                var text = clean($(el).text());
+                if (text) hits.push(text);
+            });
+            return hits.length > 0 ? hits : null;
+        }
+        return clean($(selector).first().text()) || null;
+    }
+    var $attr = (selector, attribute, multi) => {
+        if (multi) {
+            var hits = [];
+            $(selector).each((i, el) => {
+                var text = clean($(el).attr(attribute));
+                if (text) hits.push(text);
+            });
+            return hits.length > 0 ? hits : null;
+        }
+        return clean($(selector).first().attr(attribute)) || null;
+    }
+    var $meta = (name, multi) => $attr(`meta[name="${name}"]`, 'content', multi) || $attr(`meta[property="${name}"]`, 'content', multi);
+    
     result.url = (
         $attr('link[rel="canonical"]', 'href') || 
         url
