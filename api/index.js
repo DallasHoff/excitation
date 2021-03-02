@@ -192,6 +192,29 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     }
 
     // Choose citation info by priority
+    var $schema = (propName, item, multi) => {
+        var property = item ? item[propName] : mainSchema[propName];
+        if (typeof property === 'string' || typeof property === 'number') {
+            return multi ? [property] : property;
+        } else if (Array.isArray(property)) {
+            if (multi) {
+                return property.map((v, i) => $schema(i, property, multi));
+            } else {
+                return $schema(0, property, multi);
+            }
+        } else if (typeof property === 'object') {
+            if (property['name']) {
+                return $schema('name', property, multi);
+            } else if (property['@id']) {
+                for (var schema of schemas) {
+                    if (schema?.['@id'] === property['@id'] && schema?.name) {
+                        return $schema('name', schema, multi);
+                    }
+                }
+            }
+        }
+        return null;
+    }
     var $elem = (selector, multi) => {
         if (multi) {
             var hits = [];
@@ -232,6 +255,14 @@ app.get('/cite/webpage', wrap(async (req, res) => {
         $meta('author', true) || 
         $meta('article:author') || 
         $elem('[rel="author"]', true) || 
+        (() => {
+            var a = Array.from(new Set([
+                ...$schema('author', null, true) || [],
+                ...$schema('creator', null, true) || [],
+                ...$schema('contributor', null, true) || []
+            ]));
+            return a.length > 0 ? a : null;
+        })() || 
         $meta('web_author', true)
     );
     result.publication = (
