@@ -198,7 +198,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
             return multi ? [property] : property;
         } else if (Array.isArray(property)) {
             if (multi) {
-                return property.map((v, i) => $schema(i, property, multi));
+                return property.map((v, i) => $schema(i, property, false));
             } else {
                 return $schema(0, property, multi);
             }
@@ -241,10 +241,13 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     
     result.url = (
         $attr('link[rel="canonical"]', 'href') || 
+        $schema('url') || 
+        $meta('og:url') || 
         url
     );
     result.title = (
         $meta('citation_title') || 
+        $schema('headline') || 
         $meta('og:title') || 
         $meta('twitter:title') || 
         $meta('pagename') || 
@@ -253,8 +256,6 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     result.authors = (
         $meta('citation_author', true) || 
         $meta('author', true) || 
-        $meta('article:author') || 
-        $elem('[rel="author"]', true) || 
         (() => {
             var a = Array.from(new Set([
                 ...$schema('author', null, true) || [],
@@ -263,19 +264,25 @@ app.get('/cite/webpage', wrap(async (req, res) => {
             ]));
             return a.length > 0 ? a : null;
         })() || 
+        $meta('article:author') || 
+        $elem('[rel="author"]', true) || 
         $meta('web_author', true)
     );
     result.publication = (
         $meta('citation_journal_title') || 
-        $meta('og:site_name') || 
+        $schema('publisher') || 
         $meta('application-name') || 
+        $meta('og:site_name') || 
         $meta('apple-mobile-web-app-title') || 
+        $schema('copyrightHolder') || 
         $meta('copyright') || 
         $meta('owner')
     );
     result.modifiedTime = (
+        $schema('dateModified') || 
         $meta('article:modified_time') || 
         $meta('article:modified') || 
+        $meta('og:updated_time') || 
         $meta('lastmod') || 
         $meta('og:lastmod') || 
         $meta('revised') || 
@@ -285,6 +292,8 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     result.publishedTime = (
         $meta('citation_publication_date') || 
         $meta('citation_date') || 
+        $schema('datePublished') || 
+        $schema('dateCreated') || 
         $meta('article:published_time') || 
         $meta('article:published') || 
         $meta('pubdate') || 
