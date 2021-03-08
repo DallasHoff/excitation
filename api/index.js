@@ -192,23 +192,24 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     }
 
     // Choose citation info by priority
-    var $schema = (propName, item, multi) => {
+    var $schema = (propName, item, multi, getURL) => {
         var property = item ? item[propName] : mainSchema[propName];
         if (typeof property === 'string' || typeof property === 'number') {
             return multi ? [property] : property;
         } else if (Array.isArray(property)) {
             if (multi) {
-                return property.map((v, i) => $schema(i, property, false));
+                return property.map((v, i) => $schema(i, property, false, getURL));
             } else {
-                return $schema(0, property, multi);
+                return $schema(0, property, multi, getURL);
             }
         } else if (typeof property === 'object') {
-            if (property['name']) {
-                return $schema('name', property, multi);
+            var checkForKey = getURL ? 'url' : 'name';
+            if (property[checkForKey]) {
+                return $schema(checkForKey, property, multi, getURL);
             } else if (property['@id']) {
                 for (var schema of schemas) {
-                    if (schema?.['@id'] === property['@id'] && schema?.name) {
-                        return $schema('name', schema, multi);
+                    if (schema?.['@id'] === property['@id'] && schema?.[checkForKey]) {
+                        return $schema(checkForKey, schema, multi, getURL);
                     }
                 }
             }
@@ -308,6 +309,16 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     result.isbn = (
         $meta('citation_isbn', true)
     );
+    result.image = (
+        $schema('thumbnailUrl') || 
+        $meta('thumbnail') || 
+        $meta('og:image:secure_url') || 
+        $meta('og:image:url') || 
+        $meta('og:image') || 
+        $schema('image', null, false, true) || 
+        $meta('twitter:image:src') || 
+        $meta('twitter:image')
+    );
 
     // Standardize field formats
     if (result.authors !== null) result.authors = result.authors.map(v => parseFullName(v));
@@ -332,7 +343,7 @@ app.get('/cite/book', wrap(async (req, res) => {
 
     // Do search with Google Books API
     const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
-    const fetchFields = 'items(volumeInfo(title,authors,publisher,publishedDate,industryIdentifiers,printType))';
+    const fetchFields = 'items(volumeInfo(title,authors,publisher,publishedDate,industryIdentifiers,printType,imageLinks))';
     const searchUrl = `https://www.googleapis.com/books/v1/volumes?key=${apiKey}&q=${q}&fields=${fetchFields}`;
 
     try {
@@ -364,6 +375,7 @@ app.get('/cite/book', wrap(async (req, res) => {
         result.publisher = info.publisher || null;
         result.publishedTime = info.publishedDate ? new Date(info.publishedDate) : null;
         result.isbn = collectIdentifiers('isbn');
+        result.image = info?.imageLinks?.thumbnail || null;
         result.formatType = info?.printType?.toLowerCase() || null;
 
         return result;
