@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "update": "git pull && cd api && npm ci",
+    "update": "git pull && npm ci && cd api && npm ci",
     "api-start": "cd api && npm run start",
     "api-dev": "cd api && npm run dev",
     "test:unit": "vue-cli-service test:unit",
