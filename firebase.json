@@ -1,0 +1,36 @@
+{
+	"hosting": {
+		"public": "dist",
+		"ignore": [
+			"firebase.json",
+			"**/.*",
+			"**/node_modules/**"
+		],
+		"rewrites": [
+			{
+				"source": "**",
+				"destination": "/index.html"
+			}
+		]
+	},
+	"functions": {
+		"source": "api",
+		"ignore": [
+			"**/node_modules/**",
+			".env",
+			"Dockerfile",
+			".dockerignore"
+		]
+	},
+	"emulators": {
+		"functions": {
+			"port": 5001
+		},
+		"hosting": {
+			"port": 5000
+		},
+		"ui": {
+			"enabled": false
+		}
+	}
+}

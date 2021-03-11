@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node .",
-    "dev": "nodemon ."
+    "dev": "nodemon .",
+    "serve": "firebase emulators:start --only functions",
+    "deploy": "firebase deploy --only functions"
   },
   "repository": {
     "type": "git",
@@ -17,12 +19,17 @@
     "url": "https://github.com/DallasHoff/excitation/issues"
   },
   "homepage": "https://github.com/DallasHoff/excitation#readme",
+  "engines": {
+    "node": "14"
+  },
   "dependencies": {
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.5",
     "crc32": "^0.2.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "firebase-admin": "^9.5.0",
+    "firebase-functions": "^3.13.2",
     "parse-full-name": "^1.2.5"
   },
   "devDependencies": {

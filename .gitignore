@@ -1,5 +1,6 @@
 Dockerfile
-/.ionic
+.ionic
+.firebase
 
 # Logs
 logs

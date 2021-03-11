@@ -1,4 +1,6 @@
 require('dotenv').config();
+require('firebase-functions/lib/logger/compat');
+const functions = require('firebase-functions');
 const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
@@ -7,6 +9,7 @@ const parseFullName = require('parse-full-name').parseFullName;
 
 const app = express();
 const port = process.env.EXPRESS_PORT;
+const isCloudFunctionEnv = !!process.env.FUNCTION_TARGET;
 
 // Wrapper to catch errors in async routes
 const wrap = fn => (...args) => fn(...args).catch(args[2]);
@@ -24,6 +27,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     // URL to cite
     var q = queryVal(req.query.q);
     if (!q) return res.status(400).json({error: 'No URL was provided.'});
+    console.log(`Searched for: ${q}`);
 
     // Make sure URL has protocol
     var url = q;
@@ -340,15 +344,17 @@ app.get('/cite/book', wrap(async (req, res) => {
     var q = queryVal(req.query.q);
     q = encodeURIComponent(q);
     if (!q) return res.status(400).json({error: 'No search term was provided.'});
+    console.log(`Searched for: ${q}`);
 
     // Do search with Google Books API
     const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
     const fetchFields = 'items(volumeInfo(title,authors,publisher,publishedDate,industryIdentifiers,printType,imageLinks))';
-    const searchUrl = `https://www.googleapis.com/books/v1/volumes?key=${apiKey}&q=${q}&fields=${fetchFields}`;
+    const searchUrl = `https://www.googleapis.com/books/v1/volumes?country=US&key=${apiKey}&q=${q}&fields=${fetchFields}`;
 
     try {
         var {data: {items: books}} = await axios.get(searchUrl);
     } catch (err) {
+        console.error(err);
         return res.status(502).json({error: 'An error occurred with your search. Please try again.'});
     }
 
@@ -399,6 +405,11 @@ app.use((err, req, res, next) => {
 });
 
 // Listen for requests
-app.listen(port, () => {
-    console.log(`Express app listening at http://localhost:${port}`);
-});
+if (isCloudFunctionEnv === false) {
+    app.listen(port, () => {
+        console.log(`Express app listening at http://localhost:${port}`);
+    });
+}
+
+// Export for Firebase Cloud Functions
+exports.apiFunction = functions.https.onRequest(app);

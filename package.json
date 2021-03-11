@@ -8,6 +8,8 @@
     "update": "git pull && npm ci && cd api && npm ci",
     "api-start": "cd api && npm run start",
     "api-dev": "cd api && npm run dev",
+    "deploy-api": "cd api && npm run deploy",
+    "deploy-hosting": "npm run build && firebase deploy --only hosting",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint"
