@@ -18,6 +18,10 @@ const routes: Array<RouteRecordRaw> = [
 			{
 				path: 'history',
 				component: () => import('@/views/History.vue')
+			},
+			{
+				path: '/:catchAll(.*)',
+				component: () => import('@/views/404.vue')
 			}
 		]
 	}

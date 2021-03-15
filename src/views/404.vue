@@ -1,0 +1,32 @@
+<template>
+	<ion-page>
+		<ion-header>
+			<ion-toolbar>
+				<ion-title>Page Not Found</ion-title>
+			</ion-toolbar>
+		</ion-header>
+		<ion-content :fullscreen="true">
+			<ion-header collapse="condense">
+				<ion-toolbar>
+					<ion-title size="large">Page Not Found</ion-title>
+				</ion-toolbar>
+			</ion-header>
+            
+            <centered-message>
+                <p>Oops. The page that you navigated to does not exist.</p>
+                <ion-button @click="$router.go(-1)">Go Back</ion-button>
+            </centered-message>
+
+		</ion-content>
+	</ion-page>
+</template>
+
+<script>
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/vue';
+import CenteredMessage from '@/components/layout/CenteredMessage.vue';
+
+export default {
+	name: '404',
+	components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButton, CenteredMessage }
+}
+</script>
