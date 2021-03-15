@@ -2,3 +2,4 @@ node_modules
 .env
 .dockerignore
 Dockerfile
+firebase-debug.log

@@ -7,5 +7,5 @@ RUN npm ci --only=production
 COPY . .
 
 EXPOSE 3000
-CMD [ "node", "." ]
+CMD [ "npm", "run", "start" ]
 USER node

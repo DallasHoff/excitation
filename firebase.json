@@ -17,9 +17,9 @@
 		"source": "api",
 		"ignore": [
 			"**/node_modules/**",
-			".env",
-			"Dockerfile",
-			".dockerignore"
+			".env*",
+			".dockerignore",
+			"Dockerfile"
 		]
 	},
 	"emulators": {
