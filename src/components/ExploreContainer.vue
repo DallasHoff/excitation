@@ -1,43 +1,44 @@
 <template>
 	<div id="container">
-		<strong>{{ name }}</strong>
-		<p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+		<div>
+			<strong>{{ name }}</strong>
+			<ion-text color="medium">
+				<p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+			</ion-text>
+		</div>
 	</div>
 </template>
 
-<script lang="ts">
+<script>
+import { IonText } from '@ionic/vue';
 
 export default {
 	name: 'ExploreContainer',
+	components: { IonText },
 	props: {
 		name: String
 	}
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
 	text-align: center;
-	position: absolute;
-	left: 0;
-	right: 0;
-	top: 50%;
-	transform: translateY(-50%);
-}
-
-#container strong {
-	font-size: 20px;
-	line-height: 26px;
-}
-
-#container p {
-	font-size: 16px;
-	line-height: 22px;
-	color: #8c8c8c;
-	margin: 0;
-}
-
-#container a {
-	text-decoration: none;
+	strong {
+		font-size: 20px;
+		line-height: 26px;
+	}
+	p {
+		font-size: 16px;
+		line-height: 22px;
+		margin: 0;
+	}
+	a {
+		text-decoration: none;
+	}
 }
 </style>
