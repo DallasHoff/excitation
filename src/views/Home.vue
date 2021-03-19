@@ -12,17 +12,19 @@
 				</ion-toolbar>
 			</ion-header>
 		
-			<ExploreContainer name="Home page" />
+			<centered-message>
+				<strong>Coming Soon&hellip;</strong>
+			</centered-message>
 		</ion-content>
 	</ion-page>
 </template>
 
 <script>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
-import ExploreContainer from '@/components/ExploreContainer.vue';
+import CenteredMessage from '@/components/layout/CenteredMessage.vue';
 
 export default  {
 	name: 'Home',
-	components: { ExploreContainer, IonHeader, IonToolbar, IonTitle, IonContent, IonPage }
+	components: { CenteredMessage, IonHeader, IonToolbar, IonTitle, IonContent, IonPage }
 }
 </script>
