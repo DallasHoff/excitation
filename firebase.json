@@ -17,7 +17,8 @@
 		"source": "api",
 		"ignore": [
 			"**/node_modules/**",
-			".env*",
+			".env",
+			".env.production",
 			".dockerignore",
 			"Dockerfile"
 		]

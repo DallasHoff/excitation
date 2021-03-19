@@ -1,5 +1,5 @@
-require('dotenv').config();
 require('firebase-functions/lib/logger/compat');
+const path = require('path');
 const functions = require('firebase-functions');
 const express = require('express');
 const axios = require('axios');
@@ -7,9 +7,12 @@ const cheerio = require('cheerio');
 const crc32 = require('crc32');
 const parseFullName = require('parse-full-name').parseFullName;
 
+const isCloudFunctionEnv = !!process.env.FUNCTION_TARGET;
+const envConfigFile = isCloudFunctionEnv ? '.env.functions' : '.env';
+require('dotenv').config({path: path.resolve(process.cwd(), envConfigFile)});
+
 const app = express();
 const port = process.env.EXPRESS_PORT;
-const isCloudFunctionEnv = !!process.env.FUNCTION_TARGET;
 
 // Wrapper to catch errors in async routes
 const wrap = fn => (...args) => fn(...args).catch(args[2]);
