@@ -46,6 +46,7 @@ export default {
     flex-wrap: wrap;
     gap: calc(var(--gap-base) * 3);
     &__box {
+        cursor: pointer;
         padding: calc(var(--gap-base) * 3);
         background-color: rgba(var(--ion-color-medium-rgb), .2);
         border: 2px solid rgba(var(--ion-color-medium-rgb), .6);
