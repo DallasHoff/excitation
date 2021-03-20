@@ -12,19 +12,20 @@
 				</ion-toolbar>
 			</ion-header>
 			
-			<centered-message>
+			<centered-message-vue>
 				<strong>Coming Soon&hellip;</strong>
-			</centered-message>
+			</centered-message-vue>
+			
 		</ion-content>
 	</ion-page>
 </template>
 
 <script>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
-import CenteredMessage from '@/components/layout/CenteredMessage.vue';
+import CenteredMessageVue from '@/components/layout/CenteredMessage.vue';
 
-export default  {
+export default {
 	name: 'History',
-	components: { CenteredMessage, IonHeader, IonToolbar, IonTitle, IonContent, IonPage }
+	components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, CenteredMessageVue }
 }
 </script>

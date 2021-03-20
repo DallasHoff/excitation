@@ -1,6 +1,12 @@
 /* Ionic Variables and Theming. For more info, please see:
 http://ionicframework.com/docs/theming/ */
 
+/** Custom Theme Variables **/
+:root {
+    --gap-base: .3rem;
+	--border-radius: 4px;
+}
+
 /** Ionic CSS Variables **/
 :root {
 	/** primary **/
