@@ -90,7 +90,7 @@
 
 <script>
 import { Plugins } from '@capacitor/core';
-const { Clipboard } = Plugins;
+const { Clipboard, Storage } = Plugins;
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonButton, IonSpinner } from '@ionic/vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPaste, faSearch } from '@fortawesome/pro-regular-svg-icons';
@@ -140,6 +140,22 @@ export default {
 			return {};
 		}
 	},
+	watch: {
+		async citationFormat(n) {
+			try {
+				await Storage.set({key: 'citationFormatInput', value: n});
+			} catch (err) {
+				console.warn(err);
+			}
+		},
+		async sourceType(n) {
+			try {
+				await Storage.set({key: 'sourceTypeInput', value: n});
+			} catch (err) {
+				console.warn(err);
+			}
+		}
+	},
 	methods: {
 		async pasteQuery() {
 			try {
@@ -153,6 +169,17 @@ export default {
 			// TODO
 			this.searchLoading = true;
 			this.searchResults = [];
+		}
+	},
+	async created() {
+		// Stored inputs
+		try {
+			const citationFormatInput = await Storage.get({key: 'citationFormatInput'});
+			if (citationFormatInput.value) this.citationFormat = citationFormatInput.value;
+			const sourceTypeInput = await Storage.get({key: 'sourceTypeInput'});
+			if (sourceTypeInput.value) this.sourceType = sourceTypeInput.value;
+		} catch (err) {
+			console.warn(err);
 		}
 	}
 }
