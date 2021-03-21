@@ -79,9 +79,46 @@
 				</section>
 
 				<section v-if="searchResults.length > 0">
-					<h2>Here&rsquo;s What We Found</h2>
-					<!-- TODO: Search results -->
+					<h2>Sources We Found</h2>
+					<ion-list class="search-results">
+						<ion-item 
+						detail 
+						v-for="source in searchResults" 
+						:key="source.image" 
+						href="" 
+						class="search-result">
+							<ion-thumbnail 
+							class="search-result__thumbnail" 
+							slot="start">
+								<ion-img 
+								v-if="source.image" 
+								:src="source.image" 
+								alt="">
+								</ion-img>
+								<fa 
+								v-else 
+								:icon="['far', sourceTypeIcon]" 
+								size="2x" 
+								class="search-result__icon">
+								</fa>
+							</ion-thumbnail>
+							<ion-label>
+								<h3 class="search-result__title">
+									{{ source.title }}
+								</h3>
+								<div 
+								v-if="source.authors" 
+								class="search-result__authors">
+									By {{ searchResultAuthors(source.authors) }}
+								</div>
+							</ion-label>
+						</ion-item>
+					</ion-list>
 				</section>
+
+				<alert-box-vue color="danger" :show="!!searchError">
+					{{ searchError }}
+				</alert-box-vue>
 			</main-content-vue>
 
 		</ion-content>
@@ -91,18 +128,19 @@
 <script>
 import { Plugins } from '@capacitor/core';
 const { Clipboard, Storage } = Plugins;
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonButton, IonSpinner } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonButton, IonSpinner, IonList, IonItem, IonThumbnail, IonImg, IonLabel } from '@ionic/vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPaste, faSearch } from '@fortawesome/pro-regular-svg-icons';
-library.add(faPaste, faSearch);
+import { faPaste, faSearch, faGlobe, faBook } from '@fortawesome/pro-regular-svg-icons';
+library.add(faPaste, faSearch, faGlobe, faBook);
 import MainContentVue from '@/components/layout/MainContent.vue';
 import GapVue from '@/components/layout/Gap.vue';
-import InputLabelVue from '@/components/text/InputLabel.vue';
+import InputLabelVue from '@/components/presentation/InputLabel.vue';
 import RadioBoxesVue from '@/components/forms/RadioBoxes.vue';
+import AlertBoxVue from '@/components/presentation/AlertBox.vue';
 
 export default {
 	name: 'Home',
-	components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonButton, IonSpinner, MainContentVue, GapVue, InputLabelVue, RadioBoxesVue },
+	components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonButton, IonSpinner, IonList, IonItem, IonThumbnail, IonImg, IonLabel, MainContentVue, GapVue, InputLabelVue, RadioBoxesVue, AlertBoxVue },
 	data() {
 		return {
 			citationFormat: 'mla',
@@ -118,6 +156,7 @@ export default {
 				book: 'Book'
 			},
 			searchLoading: false,
+			searchError: '',
 			searchResults: []
 		}
 	},
@@ -138,6 +177,13 @@ export default {
 					};
 			}
 			return {};
+		},
+		sourceTypeIcon() {
+			switch (this.sourceType) {
+				case 'webpage': return 'globe';
+				case 'book': return 'book';
+			}
+			return '';
 		}
 	},
 	watch: {
@@ -158,6 +204,7 @@ export default {
 	},
 	methods: {
 		async pasteQuery() {
+			// Paste into query text input
 			try {
 				const clipboardText = await Clipboard.read();
 				this.query = clipboardText.value;
@@ -165,10 +212,43 @@ export default {
 				console.warn(err);
 			}
 		},
-		search() {
-			// TODO
-			this.searchLoading = true;
+		async search() {
 			this.searchResults = [];
+			this.searchLoading = true;
+			this.searchError = '';
+			try {
+				// Call API with user query
+				const q = encodeURIComponent(this.query);
+				const apiResponse = await fetch(
+					`${process.env.VUE_APP_API_URL}/cite/${this.sourceType}?q=${q}`,
+					{
+						method: 'GET'
+					}
+				);
+				const apiResponseJson = await apiResponse.json();
+				// Show results
+				if (apiResponse.ok) {
+					if (apiResponseJson.length > 0) {
+						this.searchResults = apiResponseJson;
+					} else {
+						this.searchError = 'We did not find any results for your search. Please check your input and try again.';
+					}
+				} else {
+					this.searchError = apiResponseJson.error || 'An error ocurred with your search. Please try again.';
+				}
+			} catch (err) {
+				this.searchError = 'A network error occurred. Please check your connection and try again.';
+			} finally {
+				this.searchLoading = false;
+			}
+		},
+		searchResultAuthors(authorArray) {
+			// Format author name list
+			const lastNames = authorArray.filter(author => author.last).map(author => author.last);
+			if (lastNames.length === 2) {
+				return lastNames.join(' and ', lastNames);
+			}
+			return lastNames.join(', ', lastNames);
 		}
 	},
 	async created() {
@@ -198,5 +278,32 @@ export default {
 }
 .search-button {
 	margin: 0;
+}
+.search-results {
+	padding: 0;
+	background: transparent;
+	.search-result {
+		--padding-start: 0;
+		--background: transparent;
+		&__thumbnail {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: rgba(var(--ion-color-medium-rgb), .2);
+		}
+		&__icon {
+			opacity: .5;
+		}
+		&__title,
+		&__authors {
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+		}
+		&__authors {
+			font-size: .8em;
+			color: var(--ion-color-medium);
+		}
+	}
 }
 </style>
