@@ -1,5 +1,6 @@
 require('firebase-functions/lib/logger/compat');
 const path = require('path');
+const cors = require('cors');
 const functions = require('firebase-functions');
 const express = require('express');
 const axios = require('axios');
@@ -13,6 +14,9 @@ require('dotenv').config({path: path.resolve(process.cwd(), envConfigFile)});
 
 const app = express();
 const port = process.env.EXPRESS_PORT;
+
+// Enable CORS
+app.use(cors());
 
 // Wrapper to catch errors in async routes
 const wrap = fn => (...args) => fn(...args).catch(args[2]);
