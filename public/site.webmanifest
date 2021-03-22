@@ -1,0 +1,55 @@
+{
+    "name": "Excitation",
+    "short_name": "Excitation",
+    "scope": "/",
+    "start_url": "/",
+    "description": "The app that generates your paper's citations for you easily and automatically",
+    "theme_color": "#309ff1",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "icons": [
+        {
+            "src": "/assets/icon/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        },
+        {
+            "src": "/assets/icon/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/icon/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "New Citation",
+            "short_name": "New",
+            "description": "Generate a new citation",
+            "url": "/home",
+            "icons": [
+                {
+                    "src": "/assets/icon/favicon.svg",
+                    "sizes": "any",
+                    "type": "image/svg+xml"
+                }
+            ]
+        },
+        {
+            "name": "Citation History",
+            "short_name": "History",
+            "description": "Go to the list of citations you have generated",
+            "url": "/history",
+            "icons": [
+                {
+                    "src": "/assets/icon/favicon.svg",
+                    "sizes": "any",
+                    "type": "image/svg+xml"
+                }
+            ]
+        }
+    ]
+}
