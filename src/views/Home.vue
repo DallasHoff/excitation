@@ -231,6 +231,7 @@ export default {
 				if (apiResponse.ok) {
 					if (apiResponseJson.length > 0) {
 						this.searchResults = apiResponseJson;
+						this.searchError = '';
 					} else {
 						this.searchError = 'We did not find any results for your search. Please check your input and try again.';
 					}

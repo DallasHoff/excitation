@@ -1,17 +1,20 @@
 <template>
-    <div 
-    class="alert-box" 
-    :class="['alert-box--' + color, show ? '' : 'alert-box--hidden']">
-        <div>
-            <fa 
-            :icon="['far', 'exclamation-circle']" 
-            size="lg">
-            </fa>
+    <transition name="v-fade-up">
+        <div 
+        v-show="show" 
+        class="alert-box" 
+        :class="['alert-box--' + color]">
+            <div>
+                <fa 
+                :icon="['far', 'exclamation-circle']" 
+                size="lg">
+                </fa>
+            </div>
+            <div>
+                <slot></slot>
+            </div>
         </div>
-        <div>
-            <slot></slot>
-        </div>
-    </div>
+    </transition>
 </template>
 
 <script>
@@ -41,15 +44,6 @@ export default {
     gap: calc(var(--gap-base) * 3);
     padding: calc(var(--gap-base) * 3);
     border-radius: var(--border-radius);
-    transform: none;
-    opacity: 1;
-    visibility: visible;
-    transition: transform 250ms, opacity 250ms, visibility 250ms;
-    &--hidden {
-        transform: translateY(1.5em);
-        opacity: 0;
-        visibility: hidden;
-    }
     &--danger {
         color: var(--ion-color-danger-contrast);
         background-color: var(--ion-color-danger);
@@ -62,5 +56,16 @@ export default {
         color: var(--ion-color-success-contrast);
         background-color: var(--ion-color-success);
     }
+}
+
+.v-fade-up-enter-active,
+.v-fade-up-leave-active {
+    transition: transform 250ms, opacity 250ms, visibility 250ms;
+}
+.v-fade-up-enter-from,
+.v-fade-up-leave-to {
+    transform: translateY(1.5em);
+    opacity: 0;
+    visibility: hidden;
 }
 </style>
