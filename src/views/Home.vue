@@ -116,7 +116,7 @@
 					</ion-list>
 				</section>
 
-				<alert-box-vue color="danger" :show="!!searchError">
+				<alert-box-vue color="danger" :show="searchErrorShow">
 					{{ searchError }}
 				</alert-box-vue>
 			</main-content-vue>
@@ -157,6 +157,7 @@ export default {
 			},
 			searchLoading: false,
 			searchError: '',
+			searchErrorShow: false,
 			searchResults: []
 		}
 	},
@@ -215,7 +216,7 @@ export default {
 		async search() {
 			this.searchResults = [];
 			this.searchLoading = true;
-			this.searchError = '';
+			this.searchErrorShow = false;
 			try {
 				// Call API with user query
 				const q = encodeURIComponent(this.query);
@@ -240,6 +241,7 @@ export default {
 				this.searchError = 'A network error occurred. Please check your connection and try again.';
 			} finally {
 				this.searchLoading = false;
+				if (this.searchError) this.searchErrorShow = true;
 			}
 		},
 		searchResultAuthors(authorArray) {

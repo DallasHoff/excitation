@@ -41,9 +41,14 @@ export default {
     gap: calc(var(--gap-base) * 3);
     padding: calc(var(--gap-base) * 3);
     border-radius: var(--border-radius);
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+    transition: transform 250ms, opacity 250ms, visibility 250ms;
     &--hidden {
-        /* TODO: animate */
-        display: none;
+        transform: translateY(1.5em);
+        opacity: 0;
+        visibility: hidden;
     }
     &--danger {
         color: var(--ion-color-danger-contrast);
