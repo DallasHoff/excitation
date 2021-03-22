@@ -3,7 +3,10 @@ http://ionicframework.com/docs/theming/ */
 
 /** Custom Theme Variables **/
 :root {
+	--content-width: 540px;
     --gap-base: .3rem;
+	--content-padding: calc(var(--gap-base) * 3);
+	--revert-content-padding: calc(var(--gap-base) * -3);
 	--border-radius: 4px;
 }
 

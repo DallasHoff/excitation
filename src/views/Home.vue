@@ -281,15 +281,16 @@ export default {
 }
 .search-results {
 	padding: 0;
+	margin: 0 var(--revert-content-padding);
 	background: transparent;
 	.search-result {
-		--padding-start: 0;
 		--background: transparent;
 		&__thumbnail {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			background: rgba(var(--ion-color-medium-rgb), .2);
+			color: var(--ion-color-secondary);
+			background: rgba(var(--ion-color-secondary-rgb), .2);
 		}
 		&__icon {
 			opacity: .5;

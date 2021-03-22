@@ -12,12 +12,12 @@ export default {
 
 <style>
 #main-content {
-    max-width: 540px;
+    max-width: var(--content-width);
     display: grid;
     grid-template-columns: 100%;
     grid-template-rows: auto;
-    gap: calc(var(--gap-base) * 8);
+    gap: calc(var(--content-padding) * 2);
     margin: 0 auto;
-	padding: calc(var(--gap-base) * 4);
+	padding: var(--content-padding);
 }
 </style>
