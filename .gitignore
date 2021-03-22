@@ -1,6 +1,7 @@
 api/.env*
 .ionic
 .firebase
+.npmrc
 
 # Logs
 logs
