@@ -78,41 +78,44 @@
 					</form>
 				</section>
 
-				<section v-if="searchResults.length > 0">
+				<section v-show="searchResults.length > 0">
 					<h2>Sources We Found</h2>
 					<ion-list class="search-results">
-						<ion-item 
-						detail 
-						v-for="source in searchResults" 
-						:key="source.image" 
-						href="" 
-						class="search-result">
-							<ion-thumbnail 
-							class="search-result__thumbnail" 
-							slot="start">
-								<ion-img 
-								v-if="source.image" 
-								:src="source.image" 
-								alt="">
-								</ion-img>
-								<fa 
-								v-else 
-								:icon="['far', sourceTypeIcon]" 
-								size="2x" 
-								class="search-result__icon">
-								</fa>
-							</ion-thumbnail>
-							<ion-label>
-								<h3 class="search-result__title">
-									{{ source.title }}
-								</h3>
-								<div 
-								v-if="source.authors" 
-								class="search-result__authors">
-									By {{ searchResultAuthors(source.authors) }}
-								</div>
-							</ion-label>
-						</ion-item>
+						<transition-group name="v-fade-left">
+							<ion-item 
+							detail 
+							v-for="(source, index) in searchResults" 
+							:key="source.image" 
+							href="" 
+							class="search-result" 
+							:style="{'transition-delay': (40 * index) + 'ms'}">
+								<ion-thumbnail 
+								class="search-result__thumbnail" 
+								slot="start">
+									<ion-img 
+									v-if="source.image" 
+									:src="source.image" 
+									alt="">
+									</ion-img>
+									<fa 
+									v-else 
+									:icon="['far', sourceTypeIcon]" 
+									size="2x" 
+									class="search-result__icon">
+									</fa>
+								</ion-thumbnail>
+								<ion-label>
+									<h3 class="search-result__title">
+										{{ source.title }}
+									</h3>
+									<div 
+									v-if="source.authors" 
+									class="search-result__authors">
+										By {{ searchResultAuthors(source.authors) }}
+									</div>
+								</ion-label>
+							</ion-item>
+						</transition-group>
 					</ion-list>
 				</section>
 
@@ -309,5 +312,16 @@ export default {
 			color: var(--ion-color-medium);
 		}
 	}
+}
+
+.v-fade-left-enter-active,
+.v-fade-left-leave-active {
+    transition: transform 400ms, opacity 400ms, visibility 400ms;
+}
+.v-fade-left-enter-from,
+.v-fade-left-leave-to {
+    transform: translateX(100%);
+    opacity: 0;
+    visibility: hidden;
 }
 </style>
