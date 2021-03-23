@@ -3,12 +3,12 @@ import { createStore } from 'vuex';
 const store = createStore({
 	state() {
 		return {
-			sourceToCite: {}
+			citationInfo: null
 		}
 	},
 	mutations: {
-		setSourceToCite(state, payload) {
-			state.sourceToCite = payload;
+		setCitationInfo(state, payload) {
+			state.citationInfo = payload;
 		}
 	}
 });

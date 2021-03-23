@@ -87,10 +87,11 @@
 					<ion-list class="search-results normal">
 						<transition-group name="v-fade-left">
 							<ion-item 
+							button 
 							detail 
 							v-for="(source, index) in searchResults" 
 							:key="source.url" 
-							href="" 
+							@click="citeSource(source)" 
 							class="search-result normal" 
 							:style="{'transition-delay': (40 * index) + 'ms'}">
 								<ion-thumbnail 
@@ -165,7 +166,8 @@ export default {
 			searchLoading: false,
 			searchError: '',
 			searchErrorShow: false,
-			searchResults: []
+			searchResults: [],
+			searchResultsSourceType: 'webpage'
 		}
 	},
 	computed: {
@@ -241,6 +243,7 @@ export default {
 				if (apiResponse.ok) {
 					if (apiResponseJson.length > 0) {
 						this.searchResults = apiResponseJson;
+						this.searchResultsSourceType = this.sourceType;
 						this.searchError = '';
 					} else {
 						this.searchError = 'We did not find any results for your search. Please check your input and try again.';
@@ -271,6 +274,14 @@ export default {
 				return names.join(' and ');
 			}
 			return names.join(', ');
+		},
+		citeSource(source) {
+			this.$store.commit('setCitationInfo', {
+				format: this.citationFormat,
+				type: this.searchResultsSourceType,
+				source
+			});
+			this.$router.push('/home/citation');
 		}
 	},
 	async created() {
