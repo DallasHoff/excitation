@@ -1,6 +1,6 @@
 {
 	"appId": "app.excitation.www",
-	"appName": "excitation",
+	"appName": "Excitation",
 	"bundledWebRuntime": false,
 	"npmClient": "npm",
 	"webDir": "dist",

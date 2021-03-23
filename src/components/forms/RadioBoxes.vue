@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import GapVue from '../layout/Gap.vue'
+import GapVue from '../layout/Gap.vue';
 
 export default {
     name: 'RadioBoxes',
