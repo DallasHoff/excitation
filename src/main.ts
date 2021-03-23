@@ -1,5 +1,6 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp } from 'vue';
+import App from './App.vue';
+import store from './store';
 import router from './router';
 
 import { IonicVue } from '@ionic/vue';
@@ -31,6 +32,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const app = createApp(App)
 	.use(IonicVue)
+	.use(store)
 	.use(router);
 
 app.component('fa', FontAwesomeIcon);
