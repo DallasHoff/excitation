@@ -89,7 +89,7 @@
 							<ion-item 
 							detail 
 							v-for="(source, index) in searchResults" 
-							:key="source.image" 
+							:key="source.url" 
 							href="" 
 							class="search-result normal" 
 							:style="{'transition-delay': (40 * index) + 'ms'}">

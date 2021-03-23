@@ -355,7 +355,7 @@ app.get('/cite/book', wrap(async (req, res) => {
 
     // Do search with Google Books API
     const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
-    const fetchFields = 'items(volumeInfo(title,authors,publisher,publishedDate,industryIdentifiers,printType,imageLinks))';
+    const fetchFields = 'items(volumeInfo(title,authors,publisher,publishedDate,industryIdentifiers,printType,imageLinks,canonicalVolumeLink))';
     const searchUrl = `https://www.googleapis.com/books/v1/volumes?country=US&key=${apiKey}&q=${q}&fields=${fetchFields}`;
 
     try {
@@ -389,6 +389,7 @@ app.get('/cite/book', wrap(async (req, res) => {
         result.publishedTime = info.publishedDate ? new Date(info.publishedDate) : null;
         result.isbn = collectIdentifiers('isbn');
         result.image = info?.imageLinks?.thumbnail || null;
+        result.url = info.canonicalVolumeLink || null;
         result.formatType = info?.printType?.toLowerCase() || null;
 
         return result;
