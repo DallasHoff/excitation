@@ -257,11 +257,20 @@ export default {
 		},
 		searchResultAuthors(authorArray) {
 			// Format author name list
-			const lastNames = authorArray.filter(author => author.last).map(author => author.last);
-			if (lastNames.length === 2) {
-				return lastNames.join(' and ', lastNames);
+			const names = authorArray.map(author => {
+				if (author.first && author.last) {
+					return author.first + ' ' + author.last;
+				} else if (author.last) {
+					return author.last;
+				} else if (author.first) {
+					return author.first;
+				}
+				return null;
+			}).filter(name => name !== null);
+			if (names.length === 2) {
+				return names.join(' and ');
 			}
-			return lastNames.join(', ', lastNames);
+			return names.join(', ');
 		}
 	},
 	async created() {
