@@ -48,7 +48,7 @@
 							clear-input 
 							required 
 							v-model="query" 
-							class="search-field">
+							class="search-field input-bordered">
 							</ion-input>
 						</input-label-vue>
 						<ion-button 
@@ -67,7 +67,7 @@
 						type="submit" 
 						expand="block" 
 						:disabled="searchLoading" 
-						class="search-button">
+						class="search-button normal">
 							<ion-spinner name="dots" v-if="searchLoading"></ion-spinner>
 							<span v-else>
 								<fa :icon="['far', 'search']"></fa>
@@ -78,16 +78,20 @@
 					</form>
 				</section>
 
-				<section v-show="searchResults.length > 0">
-					<h2>Sources We Found</h2>
-					<ion-list class="search-results">
+				<section v-show="showResults">
+					<transition name="v-fade-down">
+						<h2 v-show="showResults">
+							Sources We Found
+						</h2>
+					</transition>
+					<ion-list class="search-results normal">
 						<transition-group name="v-fade-left">
 							<ion-item 
 							detail 
 							v-for="(source, index) in searchResults" 
 							:key="source.image" 
 							href="" 
-							class="search-result" 
+							class="search-result normal" 
 							:style="{'transition-delay': (40 * index) + 'ms'}">
 								<ion-thumbnail 
 								class="search-result__thumbnail" 
@@ -188,6 +192,9 @@ export default {
 				case 'book': return 'book';
 			}
 			return '';
+		},
+		showResults() {
+			return this.searchResults.length > 0;
 		}
 	},
 	watch: {
@@ -272,25 +279,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.search-field {
-	--background: rgba(var(--ion-color-medium-rgb), .2);
-	border: 2px solid rgba(var(--ion-color-medium-rgb), .6);
-	border-radius: var(--border-radius);
-}
 .paste-button {
 	--padding-start: 2px;
 	--padding-end: 2px;
 	margin: 2px 0;
 }
-.search-button {
-	margin: 0;
-}
 .search-results {
-	padding: 0;
 	margin: 0 var(--revert-content-padding);
-	background: transparent;
 	.search-result {
-		--background: transparent;
 		&__thumbnail {
 			display: flex;
 			align-items: center;
@@ -312,16 +308,5 @@ export default {
 			color: var(--ion-color-medium);
 		}
 	}
-}
-
-.v-fade-left-enter-active,
-.v-fade-left-leave-active {
-    transition: transform 400ms, opacity 400ms, visibility 400ms;
-}
-.v-fade-left-enter-from,
-.v-fade-left-leave-to {
-    transform: translateX(100%);
-    opacity: 0;
-    visibility: hidden;
 }
 </style>

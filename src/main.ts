@@ -20,8 +20,10 @@ import '@ionic/vue/css/text-transformation.css';
 import '@ionic/vue/css/flex-utils.css';
 import '@ionic/vue/css/display.css';
 
-/* Theme variables */
+/* Theme CSS */
 import './theme/variables.css';
+import './theme/ionic-components.scss';
+import './theme/transitions.scss';
 
 /* Font Awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';

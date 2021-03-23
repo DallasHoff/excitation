@@ -1,0 +1,31 @@
+/* Fades */
+@each $dir in left, right, up, down {
+
+    .v-fade-#{$dir}-enter-active,
+    .v-fade-#{$dir}-leave-active {
+        transition: transform 300ms, opacity 300ms, visibility 300ms;
+    }
+    .v-fade-#{$dir}-enter-from,
+    .v-fade-#{$dir}-leave-to {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+}
+
+.v-fade-left-enter-from,
+.v-fade-left-leave-to {
+    transform: translateX(5em);
+}
+.v-fade-right-enter-from,
+.v-fade-right-leave-to {
+    transform: translateX(-5em);
+}
+.v-fade-up-enter-from,
+.v-fade-up-leave-to {
+    transform: translateY(1.5em);
+}
+.v-fade-down-enter-from,
+.v-fade-down-leave-to {
+    transform: translateY(-1.5em);
+}

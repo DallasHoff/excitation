@@ -57,15 +57,4 @@ export default {
         background-color: var(--ion-color-success);
     }
 }
-
-.v-fade-up-enter-active,
-.v-fade-up-leave-active {
-    transition: transform 250ms, opacity 250ms, visibility 250ms;
-}
-.v-fade-up-enter-from,
-.v-fade-up-leave-to {
-    transform: translateY(1.5em);
-    opacity: 0;
-    visibility: hidden;
-}
 </style>

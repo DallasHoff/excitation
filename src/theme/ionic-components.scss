@@ -1,0 +1,20 @@
+/* Customization of Ionic components */
+
+ion-input.input-bordered {
+	--background: rgba(var(--ion-color-medium-rgb), .2);
+	border: 2px solid rgba(var(--ion-color-medium-rgb), .6);
+	border-radius: var(--border-radius);
+}
+
+ion-button.normal {
+	margin: 0;
+}
+
+ion-list.normal {
+	background: transparent;
+	padding: 0;
+}
+
+ion-item.normal {
+	--background: transparent;
+}
