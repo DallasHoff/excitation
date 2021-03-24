@@ -1,7 +1,7 @@
 <template>
 	<ion-page>
 		<ion-tabs>
-			<ion-tab-bar slot="bottom">
+			<ion-tab-bar slot="bottom" translucent>
 				<ion-tab-button tab="home" href="/home">
 					<fa class="tab-button-icon" :icon="['far', 'home']" size="2x" fixed-width></fa>
 					<ion-label>Home</ion-label>
@@ -30,6 +30,6 @@ export default {
 <style scoped>
 .tab-button-icon {
 	margin-top: 2px;
-	margin-bottom: 4px;
+	margin-bottom: 2px;
 }
 </style>
