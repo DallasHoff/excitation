@@ -44,7 +44,6 @@ export default {
 .radio-boxes {
     display: flex;
     flex-wrap: wrap;
-    gap: calc(var(--gap-base) * 3);
     &__box {
         cursor: pointer;
         padding: calc(var(--gap-base) * 3);
@@ -52,6 +51,9 @@ export default {
         border: 2px solid rgba(var(--ion-color-medium-rgb), .6);
         border-radius: var(--border-radius);
         transition: background-color 200ms, border-color 200ms;
+        &:not(:last-child) {
+            margin-right: calc(var(--gap-base) * 3);
+        }
         &--checked {
             background-color: rgba(var(--ion-color-primary-rgb), .2);
             border-color: rgba(var(--ion-color-primary-rgb), .6);

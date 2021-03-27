@@ -4,13 +4,13 @@
         v-show="show" 
         class="alert-box" 
         :class="['alert-box--' + color]">
-            <div>
+            <div class="alert-box__icon">
                 <fa 
                 :icon="['far', 'exclamation-circle']" 
                 size="lg">
                 </fa>
             </div>
-            <div>
+            <div class="alert-box__message">
                 <slot></slot>
             </div>
         </div>
@@ -41,9 +41,11 @@ export default {
 .alert-box {
     display: flex;
     align-items: center;
-    gap: calc(var(--gap-base) * 3);
     padding: calc(var(--gap-base) * 3);
     border-radius: var(--border-radius);
+    &__icon {
+        margin-right: calc(var(--gap-base) * 3);
+    }
     &--danger {
         color: var(--ion-color-danger-contrast);
         background-color: var(--ion-color-danger);
