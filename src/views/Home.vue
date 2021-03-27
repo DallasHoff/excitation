@@ -134,12 +134,14 @@
 </template>
 
 <script>
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonButton, IonSpinner, IonList, IonItem, IonThumbnail, IonImg, IonLabel } from '@ionic/vue';
 import { Plugins } from '@capacitor/core';
 const { Clipboard, Storage } = Plugins;
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonButton, IonSpinner, IonList, IonItem, IonThumbnail, IonImg, IonLabel } from '@ionic/vue';
+
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPaste, faSearch, faGlobe, faBook } from '@fortawesome/pro-regular-svg-icons';
 library.add(faPaste, faSearch, faGlobe, faBook);
+
 import MainContentVue from '@/components/layout/MainContent.vue';
 import GapVue from '@/components/layout/Gap.vue';
 import InputLabelVue from '@/components/presentation/InputLabel.vue';

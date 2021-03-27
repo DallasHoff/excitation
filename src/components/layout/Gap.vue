@@ -22,44 +22,18 @@ export default {
 .gap {
     &-block {
         display: block;
-        &-1 {
-            margin-block-end: calc(var(--gap-base) * 1);
-        }
-        &-2 {
-            margin-block-end: calc(var(--gap-base) * 2);
-        }
-        &-3 {
-            margin-block-end: calc(var(--gap-base) * 3);
-        }
-        &-4 {
-            margin-block-end: calc(var(--gap-base) * 4);
-        }
-        &-5 {
-            margin-block-end: calc(var(--gap-base) * 5);
-        }
-        &-6 {
-            margin-block-end: calc(var(--gap-base) * 6);
+        @each $size in 1, 2, 3, 4, 5, 6 {
+            &-#{$size} {
+                margin-block-end: calc(var(--gap-base) * #{$size});
+            }
         }
     }
     &-inline {
         display: inline-block;
-        &-1 {
-            margin-inline-end: calc(var(--gap-base) * 1);
-        }
-        &-2 {
-            margin-inline-end: calc(var(--gap-base) * 2);
-        }
-        &-3 {
-            margin-inline-end: calc(var(--gap-base) * 3);
-        }
-        &-4 {
-            margin-inline-end: calc(var(--gap-base) * 4);
-        }
-        &-5 {
-            margin-inline-end: calc(var(--gap-base) * 5);
-        }
-        &-6 {
-            margin-inline-end: calc(var(--gap-base) * 6);
+        @each $size in 1, 2, 3, 4, 5, 6 {
+            &-#{$size} {
+                margin-inline-end: calc(var(--gap-base) * #{$size});
+            }
         }
     }
 }
