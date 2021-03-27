@@ -52,6 +52,7 @@
 							</ion-input>
 						</input-label-vue>
 						<ion-button 
+						v-if="showPasteButton" 
 						type="button" 
 						fill="clear" 
 						size="small" 
@@ -134,7 +135,7 @@
 </template>
 
 <script>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonButton, IonSpinner, IonList, IonItem, IonThumbnail, IonImg, IonLabel } from '@ionic/vue';
+import { getPlatforms, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonButton, IonSpinner, IonList, IonItem, IonThumbnail, IonImg, IonLabel } from '@ionic/vue';
 import { Plugins } from '@capacitor/core';
 const { Clipboard, Storage } = Plugins;
 
@@ -196,6 +197,17 @@ export default {
 				case 'book': return 'book';
 			}
 			return '';
+		},
+		showPasteButton() {
+			// Only show paste button if supported by platform
+			const platforms = getPlatforms();
+			if (
+				platforms.indexOf('hyrid') > -1 || 
+				(!!navigator.clipboard && !!navigator.clipboard.read)
+			) {
+				return true;
+			}
+			return false;
 		},
 		showResults() {
 			return this.searchResults.length > 0;
