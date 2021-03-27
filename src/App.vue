@@ -13,6 +13,15 @@ export default defineComponent({
 	components: {
 		IonApp,
 		IonRouterOutlet
+	},
+	mounted() {
+		// Scroll content when keyboard opens or closes
+		window.addEventListener('ionKeyboardDidShow', () => {
+			document.activeElement.scrollIntoView({behavior: 'smooth'});
+		});
+		window.addEventListener('ionKeyboardDidHide', () => {
+			document.querySelector('ion-header').scrollIntoView({behavior: 'smooth'});
+		});
 	}
 });
 </script>
