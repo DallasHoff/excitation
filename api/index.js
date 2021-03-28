@@ -280,7 +280,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
         $elem('[rel="author"]', true) || 
         $meta('web_author', true)
     );
-    result.publication = (
+    result.publisher = (
         $meta('citation_journal_title') || 
         $schema('publisher') || 
         $meta('application-name') || 
