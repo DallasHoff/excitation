@@ -56,7 +56,7 @@
 						type="button" 
 						fill="clear" 
 						size="small" 
-						class="paste-button" 
+						class="paste-button button-under-input" 
 						@click="pasteQuery()">
 							<fa :icon="['far', 'paste']"></fa>
 							<gap-vue direction="inline"></gap-vue>
@@ -115,7 +115,7 @@
 										{{ source.title }}
 									</h3>
 									<div 
-									v-if="source.authors" 
+									v-if="searchResultAuthors(source.authors)" 
 									class="search-result__authors">
 										By {{ searchResultAuthors(source.authors) }}
 									</div>
@@ -274,6 +274,7 @@ export default {
 		},
 		searchResultAuthors(authorArray) {
 			// Format author name list
+			if (!authorArray) return null;
 			const names = authorArray.map(author => {
 				let name = '';
 				if (author.first && author.middle && author.last) {
@@ -298,7 +299,7 @@ export default {
 			this.$store.commit('setCitationInfo', {
 				format: this.citationFormat,
 				type: this.searchResultsSourceType,
-				source
+				source: JSON.parse(JSON.stringify(source))
 			});
 			this.$router.push('/home/citation');
 		}
@@ -318,11 +319,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.paste-button {
-	--padding-start: 2px;
-	--padding-end: 2px;
-	margin: 2px 0;
-}
 .search-results {
 	margin: 0 var(--revert-content-padding);
 	.search-result {

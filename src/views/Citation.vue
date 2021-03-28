@@ -20,8 +20,108 @@
 			
 			<main-content-vue>
                 <section>
-					{{ citationInfo }}<!-- TODO -->
+					<h1>Your Citation</h1>
+					<gap-vue :size="4"></gap-vue>
+
+					TODO: {{ citationInfo }}
+
                 </section>
+
+				<section v-if="citationInfo">
+					<h2>Citation Information</h2>
+					<gap-vue :size="4"></gap-vue>
+
+					<input-label-vue text="Title" text-tag="h3">
+						<ion-input 
+						name="title" 
+						type="text" 
+						inputmode="text" 
+						v-model="citationInfo.source.title" 
+						class="input-bordered">
+						</ion-input>
+					</input-label-vue>
+					<gap-vue :size="6"></gap-vue>
+
+					<div>
+						<h3>{{ authorLabel }}</h3>
+						<div 
+						v-for="(author, index) in citationInfo.source.authors" 
+						:key="`${author.first} ${author.middle} ${author.last} ${author.suffix}`" 
+						class="author-input-group">
+							<input-label-vue text="First">
+								<ion-input 
+								:name="'author-first-' + index" 
+								type="text" 
+								inputmode="text" 
+								v-model="author.first" 
+								class="input-bordered">
+								</ion-input>
+							</input-label-vue>
+							<input-label-vue text="Middle">
+								<ion-input 
+								:name="'author-middle-' + index" 
+								type="text" 
+								inputmode="text" 
+								v-model="author.middle" 
+								class="input-bordered">
+								</ion-input>
+							</input-label-vue>
+							<input-label-vue text="Last">
+								<ion-input 
+								:name="'author-last-' + index" 
+								type="text" 
+								inputmode="text" 
+								v-model="author.last" 
+								class="input-bordered">
+								</ion-input>
+							</input-label-vue>
+							<input-label-vue text="Suffix">
+								<ion-input 
+								:name="'author-suffix-' + index" 
+								type="text" 
+								inputmode="text" 
+								v-model="author.suffix" 
+								class="input-bordered">
+								</ion-input>
+							</input-label-vue>
+						</div>
+					</div>
+					<ion-button 
+					type="button" 
+					fill="clear" 
+					size="small" 
+					class="button-under-input" 
+					@click="addAuthor()">
+						<fa :icon="['far', 'plus']"></fa>
+						<gap-vue direction="inline"></gap-vue>
+						Add Another Author
+					</ion-button>
+					<gap-vue :size="4" v-if="citationInfo.source.authors"></gap-vue>
+
+					<input-label-vue text="Publisher" text-tag="h3">
+						<ion-input 
+						name="publisher" 
+						type="text" 
+						inputmode="text" 
+						v-model="citationInfo.source.publisher" 
+						class="input-bordered">
+						</ion-input>
+					</input-label-vue>
+					<gap-vue :size="6"></gap-vue>
+
+					<input-label-vue text="Date Published" text-tag="h3">
+						<ion-datetime 
+						name="published-time" 
+						display-format="DD MMM YYYY" 
+						display-timezone="utc" 
+						min="1600" 
+						v-model="citationInfo.source.publishedTime" 
+						class="input-bordered">
+						</ion-datetime>
+					</input-label-vue>
+					<gap-vue :size="6"></gap-vue>
+
+				</section>
             </main-content-vue>
 			
 		</ion-content>
@@ -29,22 +129,68 @@
 </template>
 
 <script>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput, IonDatetime, IonButton } from '@ionic/vue';
 import MainContentVue from '@/components/layout/MainContent.vue';
+import InputLabelVue from '@/components/presentation/InputLabel.vue';
+import GapVue from '@/components/layout/Gap.vue';
+
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { faPlus } from '@fortawesome/pro-regular-svg-icons';
+library.add(faPlus);
 
 export default {
 	name: 'Citation',
-	components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButtons, IonBackButton, MainContentVue },
+	components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput, IonDatetime, IonButton, MainContentVue, InputLabelVue, GapVue },
     computed: {
-        citationInfo() {
-            return this.$store.state.citationInfo;
-        }
+		citationInfo: {
+			get() {
+				return this.$store.state.citationInfo;
+			},
+			set(value) {
+				this.$store.commit('setCitationInfo', value);
+			}
+		},
+		authorLabel() {
+			if (this.citationInfo?.source?.authors?.length > 1) {
+				return 'Authors';
+			}
+			return 'Author';
+		}
     },
+	methods: {
+		addAuthor() {
+			this.citationInfo?.source?.authors?.push({
+				title: '',
+				first: '',
+				middle: '',
+				last: '',
+				suffix: ''
+			});
+		}
+	},
 	created() {
 		// Redirect to home if state has no citation info
 		if (!this.citationInfo) {
 			this.$router.push('/home');
 		}
+		// Add fields for author if none was found
+		if (!this.citationInfo.source.authors) {
+			this.citationInfo.source.authors = [];
+			this.addAuthor();
+		}
 	}
 }
 </script>
+
+<style lang="scss" scoped>
+.author-input-group {
+	display: grid;
+	grid-template-columns: 3fr 2fr 3fr 1fr;
+	gap: calc(var(--gap-base) * 2);
+	margin-bottom: calc(var(--gap-base) * 4);
+	white-space: nowrap;
+	&:last-child {
+		margin-bottom: calc(var(--gap-base) * 2);
+	}
+}
+</style>

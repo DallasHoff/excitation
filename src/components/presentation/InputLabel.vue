@@ -1,6 +1,6 @@
 <template>
     <component :is="tag" class="input-label">
-		<span class="input-label__text">{{ text }}</span>
+		<component :is="textTag" class="input-label__text">{{ text }}</component>
 		<gap-vue v-if="text" :size="2"></gap-vue>
         <slot></slot>
     </component>
@@ -19,16 +19,18 @@ export default {
         },
         text: {
             type: String
+        },
+        textTag: {
+            type: String,
+            default: 'span'
         }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.input-label {
-    &__text {
-		font-size: 1.2em;
-		color: rgba(var(--ion-color-dark-rgb), .8);
-    }
+span.input-label__text {
+    font-size: 1.2em;
+    color: rgba(var(--ion-color-dark-rgb), .8);
 }
 </style>
