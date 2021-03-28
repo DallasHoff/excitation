@@ -275,14 +275,19 @@ export default {
 		searchResultAuthors(authorArray) {
 			// Format author name list
 			const names = authorArray.map(author => {
-				if (author.first && author.last) {
-					return author.first + ' ' + author.last;
+				let name = '';
+				if (author.first && author.middle && author.last) {
+					name = `${author.first} ${author.middle} ${author.last}`;
+					if (author.suffix) name += ` ${author.suffix}`;
+				} else if (author.first && author.last) {
+					name = `${author.first} ${author.last}`;
+					if (author.suffix) name += ` ${author.suffix}`;
 				} else if (author.last) {
-					return author.last;
+					name = author.last;
 				} else if (author.first) {
-					return author.first;
+					name = author.first;
 				}
-				return null;
+				return name || null;
 			}).filter(name => name !== null);
 			if (names.length === 2) {
 				return names.join(' and ');
