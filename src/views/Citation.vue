@@ -44,55 +44,57 @@
 
 					<div>
 						<h3>{{ authorLabel }}</h3>
-						<div 
-						v-for="(author, index) in citationInfo.source.authors" 
-						:key="`${author.first} ${author.middle} ${author.last} ${author.suffix}`" 
-						class="author-input-group">
-							<input-label-vue text="First">
-								<ion-input 
-								:name="'author-first-' + index" 
-								type="text" 
-								inputmode="text" 
-								v-model="author.first" 
-								class="input-bordered">
-								</ion-input>
-							</input-label-vue>
-							<input-label-vue text="Middle">
-								<ion-input 
-								:name="'author-middle-' + index" 
-								type="text" 
-								inputmode="text" 
-								v-model="author.middle" 
-								class="input-bordered">
-								</ion-input>
-							</input-label-vue>
-							<input-label-vue text="Last">
-								<ion-input 
-								:name="'author-last-' + index" 
-								type="text" 
-								inputmode="text" 
-								v-model="author.last" 
-								class="input-bordered">
-								</ion-input>
-							</input-label-vue>
-							<input-label-vue text="Suffix">
-								<ion-input 
-								:name="'author-suffix-' + index" 
-								type="text" 
-								inputmode="text" 
-								v-model="author.suffix" 
-								class="input-bordered">
-								</ion-input>
-							</input-label-vue>
-							<ion-button 
-							type="button" 
-							fill="clear" 
-							class="remove-author-button" 
-							:disabled="citationInfo.source.authors.length < 2" 
-							@click="removeAuthor(index)">
-								<fa :icon="['far', 'times']"></fa>
-							</ion-button>
-						</div>
+						<transition-group name="v-fade-up">
+							<div 
+							v-for="(author, index) in citationInfo.source.authors" 
+							:key="`${author.first} ${author.middle} ${author.last} ${author.suffix}`" 
+							class="author-input-group">
+								<input-label-vue text="First">
+									<ion-input 
+									:name="'author-first-' + index" 
+									type="text" 
+									inputmode="text" 
+									v-model="author.first" 
+									class="input-bordered">
+									</ion-input>
+								</input-label-vue>
+								<input-label-vue text="Middle">
+									<ion-input 
+									:name="'author-middle-' + index" 
+									type="text" 
+									inputmode="text" 
+									v-model="author.middle" 
+									class="input-bordered">
+									</ion-input>
+								</input-label-vue>
+								<input-label-vue text="Last">
+									<ion-input 
+									:name="'author-last-' + index" 
+									type="text" 
+									inputmode="text" 
+									v-model="author.last" 
+									class="input-bordered">
+									</ion-input>
+								</input-label-vue>
+								<input-label-vue text="Suffix">
+									<ion-input 
+									:name="'author-suffix-' + index" 
+									type="text" 
+									inputmode="text" 
+									v-model="author.suffix" 
+									class="input-bordered">
+									</ion-input>
+								</input-label-vue>
+								<ion-button 
+								type="button" 
+								fill="clear" 
+								class="remove-author-button" 
+								:disabled="citationInfo.source.authors.length < 2" 
+								@click="removeAuthor(index)">
+									<fa :icon="['far', 'times']"></fa>
+								</ion-button>
+							</div>
+						</transition-group>
 					</div>
 					<ion-button 
 					type="button" 
