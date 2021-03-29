@@ -84,6 +84,14 @@
 								class="input-bordered">
 								</ion-input>
 							</input-label-vue>
+							<ion-button 
+							type="button" 
+							fill="clear" 
+							class="remove-author-button" 
+							:disabled="citationInfo.source.authors.length < 2" 
+							@click="removeAuthor(index)">
+								<fa :icon="['far', 'times']"></fa>
+							</ion-button>
 						</div>
 					</div>
 					<ion-button 
@@ -135,8 +143,8 @@ import InputLabelVue from '@/components/presentation/InputLabel.vue';
 import GapVue from '@/components/layout/Gap.vue';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPlus } from '@fortawesome/pro-regular-svg-icons';
-library.add(faPlus);
+import { faPlus, faTimes } from '@fortawesome/pro-regular-svg-icons';
+library.add(faPlus, faTimes);
 
 export default {
 	name: 'Citation',
@@ -166,15 +174,17 @@ export default {
 				last: '',
 				suffix: ''
 			});
+		},
+		removeAuthor(index) {
+			this.citationInfo?.source?.authors?.splice(index, 1);
 		}
 	},
 	created() {
-		// Redirect to home if state has no citation info
-		if (!this.citationInfo) {
+		if (!this.citationInfo?.source) {
+			// Redirect to home if state has no citation info
 			this.$router.push('/home');
-		}
-		// Add fields for author if none was found
-		if (!this.citationInfo.source.authors) {
+		} else if (!this.citationInfo.source.authors) {
+			// Add fields for author if none was found
 			this.citationInfo.source.authors = [];
 			this.addAuthor();
 		}
@@ -185,12 +195,18 @@ export default {
 <style lang="scss" scoped>
 .author-input-group {
 	display: grid;
-	grid-template-columns: 3fr 2fr 3fr 1fr;
+	grid-template-columns: 3fr 2fr 3fr 1fr 0.5fr;
 	gap: calc(var(--gap-base) * 2);
 	margin-bottom: calc(var(--gap-base) * 4);
 	white-space: nowrap;
 	&:last-child {
 		margin-bottom: calc(var(--gap-base) * 2);
 	}
+}
+.remove-author-button {
+	font-size: 1.4em;
+    --padding-start: 0;
+    --padding-end: 0;
+    margin: auto 0 .2em 0;
 }
 </style>
