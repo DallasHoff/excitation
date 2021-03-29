@@ -91,7 +91,7 @@
 								class="remove-author-button" 
 								:disabled="citationInfo.source.authors.length < 2" 
 								@click="removeAuthor(index)">
-									<fa :icon="['far', 'times']"></fa>
+									<fa :icon="['far', 'times']" title="Remove this author"></fa>
 								</ion-button>
 							</div>
 						</transition-group>
