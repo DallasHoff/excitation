@@ -47,7 +47,7 @@
 						<transition-group name="v-fade-up">
 							<div 
 							v-for="(author, index) in citationInfo.source.authors" 
-							:key="`${author.first} ${author.middle} ${author.last} ${author.suffix}`" 
+							:key="author.key" 
 							class="author-input-group">
 								<input-label-vue text="First">
 									<ion-input 
@@ -168,13 +168,17 @@ export default {
 		}
     },
 	methods: {
+		getRandomInt() {
+			return Math.floor(Math.random() * 1000000);
+		},
 		addAuthor() {
 			this.citationInfo?.source?.authors?.push({
 				title: '',
 				first: '',
 				middle: '',
 				last: '',
-				suffix: ''
+				suffix: '',
+				key: this.getRandomInt()
 			});
 		},
 		removeAuthor(index) {
@@ -185,10 +189,17 @@ export default {
 		if (!this.citationInfo?.source) {
 			// Redirect to home if state has no citation info
 			this.$router.push('/home');
-		} else if (!this.citationInfo.source.authors) {
+		} else {
 			// Add fields for author if none was found
-			this.citationInfo.source.authors = [];
-			this.addAuthor();
+			if (!this.citationInfo.source.authors) {
+				this.citationInfo.source.authors = [];
+				this.addAuthor();
+			}
+			// Add keys for authors
+			this.citationInfo.source.authors = this.citationInfo.source.authors.map(author => {
+				author.key = this.getRandomInt();
+				return author;
+			});
 		}
 	}
 }
