@@ -47,6 +47,7 @@ export default {
     &__box {
         cursor: pointer;
         padding: calc(var(--gap-base) * 3);
+        margin-bottom: calc(var(--gap-base) * 3);
         background-color: rgba(var(--ion-color-medium-rgb), .2);
         border: 2px solid rgba(var(--ion-color-medium-rgb), .6);
         border-radius: var(--border-radius);

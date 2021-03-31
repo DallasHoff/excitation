@@ -23,12 +23,14 @@
 					<h1>Your Citation</h1>
 					<gap-vue :size="4"></gap-vue>
 
-					TODO: {{ citationInfo }}
+					<div class="citation-box">
+						<p class="citation-box__citation">TODO: {{ citationInfo }}</p>
+					</div>
 
                 </section>
 
 				<section v-if="citationInfo">
-					<h2>Citation Information</h2>
+					<h2>Edit Citation Information</h2>
 					<gap-vue :size="4"></gap-vue>
 
 					<input-label-vue text="Title" text-tag="h3">
@@ -172,6 +174,12 @@ export default {
 				this.$store.commit('setCitationInfo', value);
 			}
 		},
+		citationFormats() {
+			return this.$store.state.citationFormats;
+		},
+		sourceTypes() {
+			return this.$store.state.sourceTypes;
+		},
 		authorLabel() {
 			if (this.citationInfo?.source?.authors?.length > 1) {
 				return 'Authors';
@@ -220,6 +228,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.citation-box {
+	user-select: text;
+	padding: calc(var(--gap-base) * 3);
+	background-color: rgba(var(--ion-color-secondary-rgb), .2);
+	border: 2px solid rgba(var(--ion-color-secondary-rgb), .6);
+	border-radius: var(--border-radius);
+	&__citation {
+		margin: 0;
+	}
+}
 .author-input-group {
 	display: grid;
 	grid-template-columns: 3fr 2fr 3fr 1fr 0.5fr;
@@ -232,8 +250,9 @@ export default {
 }
 .remove-author-button {
 	font-size: 1.4em;
+	height: auto;
     --padding-start: 0;
     --padding-end: 0;
-    margin: auto 0 .2em 0;
+    margin: auto 0 .4em 0;
 }
 </style>

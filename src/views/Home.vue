@@ -27,7 +27,7 @@
 							:inputs="citationFormatInputs">
 							</radio-boxes-vue>
 						</input-label-vue>
-						<gap-vue :size="4"></gap-vue>
+						<gap-vue :size="1"></gap-vue>
 
 						<input-label-vue 
 						tag="div" 
@@ -38,7 +38,7 @@
 							:inputs="sourceTypeInputs">
 							</radio-boxes-vue>
 						</input-label-vue>
-						<gap-vue :size="4"></gap-vue>
+						<gap-vue :size="1"></gap-vue>
 
 						<input-label-vue :text="queryField.label">
 							<ion-input 
@@ -157,15 +157,6 @@ export default {
 			citationFormat: 'mla',
 			sourceType: 'webpage',
 			query: '',
-			citationFormatInputs: {
-				mla: 'MLA',
-				apa: 'APA',
-				chicago: 'Chicago'
-			},
-			sourceTypeInputs: {
-				webpage: 'Web Page',
-				book: 'Book'
-			},
 			searchLoading: false,
 			searchError: '',
 			searchErrorShow: false,
@@ -174,6 +165,12 @@ export default {
 		}
 	},
 	computed: {
+		citationFormatInputs() {
+			return this.$store.state.citationFormats;
+		},
+		sourceTypeInputs() {
+			return this.$store.state.sourceTypes;
+		},
 		queryField() {
 			switch (this.sourceType) {
 				case 'webpage': 
