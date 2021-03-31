@@ -123,13 +123,25 @@
 						<ion-datetime 
 						name="published-time" 
 						display-format="DD MMM YYYY" 
-						display-timezone="utc" 
 						min="1600" 
 						v-model="citationInfo.source.publishedTime" 
 						class="input-bordered">
 						</ion-datetime>
 					</input-label-vue>
 					<gap-vue :size="6"></gap-vue>
+
+					<div v-if="citationInfo.type === 'webpage'">
+						<input-label-vue text="Date Retrieved" text-tag="h3">
+							<ion-datetime 
+							name="retrieved-time" 
+							display-format="DD MMM YYYY" 
+							min="2000" 
+							v-model="citationInfo.retrievedTime" 
+							class="input-bordered">
+							</ion-datetime>
+						</input-label-vue>
+						<gap-vue :size="6"></gap-vue>
+					</div>
 
 				</section>
             </main-content-vue>
@@ -188,7 +200,7 @@ export default {
 	created() {
 		if (!this.citationInfo?.source) {
 			// Redirect to home if state has no citation info
-			this.$router.push('/home');
+			this.$router.replace('/home');
 		} else {
 			// Add fields for author if none was found
 			if (!this.citationInfo.source.authors) {
@@ -200,6 +212,8 @@ export default {
 				author.key = this.getRandomInt();
 				return author;
 			});
+			// Initialize date retrieved with current date
+			this.citationInfo.retrievedTime = new Date().toISOString();
 		}
 	}
 }
