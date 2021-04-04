@@ -188,7 +188,7 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     // Choose main Schema.org schema
     var mainSchema = {};
     // Schema types ordered by priority
-    const recognizedTypes = ['Article', 'ScholarlyArticle', 'MedicalScholarlyArticle', 'NewsArticle', 'TechArticle', 'AnalysisNewsArticle', 'ReportageNewsArticle', 'ReviewNewsArticle', 'AskPublicNewsArticle', 'BackgroundNewsArticle', 'OpinionNewsArticle', 'Thesis', 'BlogPosting', 'LiveBlogPosting', 'Report', 'Guide', 'HowTo', 'WebPage', 'AboutPage', 'ProfilePage', 'ContactPage', 'FAQPage', 'ItemPage', 'MedicalWebPage', 'QAPage', 'Review', 'ClaimReview', 'CriticReview', 'MediaReview', 'EmployerReview', 'SocialMediaPosting', 'WebContent', 'HealthTopicContent', 'LearningResource', 'Course', 'AmpStory', 'Recipe', 'RealEstateListing', 'Recommendation', 'Quotation', 'UserReview', 'Blog', 'WebSite', 'CreativeWork'];
+    const recognizedTypes = ['Article', 'ScholarlyArticle', 'MedicalScholarlyArticle', 'NewsArticle', 'TechArticle', 'AnalysisNewsArticle', 'ReportageNewsArticle', 'ReviewNewsArticle', 'AskPublicNewsArticle', 'BackgroundNewsArticle', 'OpinionNewsArticle', 'Thesis', 'BlogPosting', 'LiveBlogPosting', 'Report', 'Guide', 'HowTo', 'WebPage', 'AboutPage', 'ProfilePage', 'ContactPage', 'FAQPage', 'ItemPage', 'MedicalWebPage', 'QAPage', 'CollectionPage', 'Review', 'ClaimReview', 'CriticReview', 'MediaReview', 'EmployerReview', 'SocialMediaPosting', 'WebContent', 'HealthTopicContent', 'LearningResource', 'Course', 'AmpStory', 'Recipe', 'RealEstateListing', 'Recommendation', 'Quotation', 'UserReview', 'Blog', 'WebSite', 'CreativeWork'];
     // Choose by priority and order on page
     for (var type of recognizedTypes) {
         var schemaChosen = false;
