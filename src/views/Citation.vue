@@ -24,7 +24,44 @@
 					<gap-vue :size="4"></gap-vue>
 
 					<div class="citation-box">
-						<p class="citation-box__citation">TODO: {{ citationInfo }}</p>
+
+						<div class="citation-box__header">
+							<div class="citation-chips">
+								<div 
+								v-if="citationInfo?.format"
+								class="citation-chips__chip">
+									{{ citationFormats[citationInfo.format] }}
+								</div>
+								<div 
+								v-if="citationInfo?.type"
+								class="citation-chips__chip">
+									{{ sourceTypes[citationInfo.type] }}
+								</div>
+							</div>
+							<ion-button 
+							type="button" 
+							size="small" 
+							@click="copyCitation()" 
+							class="normal citation-box__copy-button">
+								<span v-if="copyButtonState === 'success'">
+									<fa :icon="['far', 'check']"></fa>
+									<gap-vue direction="inline"></gap-vue>
+									Copied!
+								</span>
+								<span v-else>
+									<fa :icon="['far', 'copy']"></fa>
+									<gap-vue direction="inline"></gap-vue>
+									Copy
+								</span>
+							</ion-button>
+						</div>
+
+						<p 
+						class="citation-box__citation" 
+						ref="citation" 
+						v-html="citation">
+						</p>
+
 					</div>
 
                 </section>
@@ -159,12 +196,18 @@ import InputLabelVue from '@/components/presentation/InputLabel.vue';
 import GapVue from '@/components/layout/Gap.vue';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPlus, faTimes } from '@fortawesome/pro-regular-svg-icons';
-library.add(faPlus, faTimes);
+import { faPlus, faTimes, faCopy, faCheck } from '@fortawesome/pro-regular-svg-icons';
+library.add(faPlus, faTimes, faCopy, faCheck);
 
 export default {
 	name: 'Citation',
 	components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput, IonDatetime, IonButton, MainContentVue, InputLabelVue, GapVue },
+	data() {
+		return {
+			citation: 'Harwood, W. (2015, April 22). <i>How NASA fixed Hubble\'s flawed vision - and reputation</i>. Retrieved from https://www.cbsnews.com/news/an-ingenius-fix-for-hubbles-famously-flawed-vision/ [EXAMPLE]', // TODO
+			copyButtonState: 'ready'
+		}
+	},
     computed: {
 		citationInfo: {
 			get() {
@@ -203,6 +246,13 @@ export default {
 		},
 		removeAuthor(index) {
 			this.citationInfo?.source?.authors?.splice(index, 1);
+		},
+		copyCitation() {
+			// TODO: copy functionality
+			this.copyButtonState = 'success';
+			setTimeout(() => {
+				this.copyButtonState = 'ready';
+			}, 3000);
 		}
 	},
 	created() {
@@ -231,11 +281,32 @@ export default {
 .citation-box {
 	user-select: text;
 	padding: calc(var(--gap-base) * 3);
-	background-color: rgba(var(--ion-color-secondary-rgb), .2);
-	border: 2px solid rgba(var(--ion-color-secondary-rgb), .6);
+	background-color: rgba(233, 233, 233, .85);
 	border-radius: var(--border-radius);
+	&__header {
+		display: flex;
+	}
+	&__copy-button {
+		margin-left: auto;
+	}
 	&__citation {
+		font-family: sans-serif;
+		color: black;
+		padding-left: 2rem;
+		text-indent: -2rem;
 		margin: 0;
+	}
+}
+.citation-chips {
+	display: flex;
+	flex-wrap: wrap;
+	&__chip {
+		margin: 0 calc(var(--gap-base) * 2) calc(var(--gap-base) * 4) 0;
+		padding: var(--gap-base) calc(var(--gap-base) * 2.5);
+		color: var(--ion-color-secondary-contrast);
+		background-color: var(--ion-color-secondary-shade);
+		border-radius: 14px;
+		white-space: nowrap;
 	}
 }
 .author-input-group {
