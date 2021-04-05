@@ -280,7 +280,7 @@ export default {
 <style lang="scss" scoped>
 .citation-box {
 	user-select: text;
-	padding: calc(var(--gap-base) * 3);
+	padding: calc(var(--gap-base) * 4) calc(var(--gap-base) * 3);
 	background-color: rgba(233, 233, 233, .85);
 	border-radius: var(--border-radius);
 	&__header {
