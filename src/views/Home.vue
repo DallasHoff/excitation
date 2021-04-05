@@ -85,44 +85,7 @@
 							Sources We Found
 						</h2>
 					</transition>
-					<ion-list class="search-results normal">
-						<transition-group name="v-fade-left">
-							<ion-item 
-							button 
-							detail 
-							v-for="(source, index) in searchResults" 
-							:key="source.url" 
-							@click="citeSource(source)" 
-							class="search-result normal" 
-							:style="{'transition-delay': (40 * index) + 'ms'}">
-								<ion-thumbnail 
-								class="search-result__thumbnail" 
-								slot="start">
-									<ion-img 
-									v-if="source.image" 
-									:src="source.image" 
-									alt="">
-									</ion-img>
-									<fa 
-									v-else 
-									:icon="['far', sourceTypeIcon]" 
-									size="2x" 
-									class="search-result__icon">
-									</fa>
-								</ion-thumbnail>
-								<ion-label>
-									<h3 class="search-result__title">
-										{{ source.title }}
-									</h3>
-									<div 
-									v-if="searchResultAuthors(source.authors)" 
-									class="search-result__authors">
-										By {{ searchResultAuthors(source.authors) }}
-									</div>
-								</ion-label>
-							</ion-item>
-						</transition-group>
-					</ion-list>
+					<citation-list-vue :citation-set="searchResults"></citation-list-vue>
 				</section>
 
 				<alert-box-vue color="danger" :show="searchErrorShow">
@@ -135,23 +98,24 @@
 </template>
 
 <script>
-import { getPlatforms, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonButton, IonSpinner, IonList, IonItem, IonThumbnail, IonImg, IonLabel } from '@ionic/vue';
+import { getPlatforms, IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonButton, IonSpinner } from '@ionic/vue';
 import { Plugins } from '@capacitor/core';
 const { Clipboard, Storage } = Plugins;
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPaste, faSearch, faGlobe, faBook } from '@fortawesome/pro-regular-svg-icons';
-library.add(faPaste, faSearch, faGlobe, faBook);
+import { faPaste, faSearch } from '@fortawesome/pro-regular-svg-icons';
+library.add(faPaste, faSearch);
 
 import MainContentVue from '@/components/layout/MainContent.vue';
 import GapVue from '@/components/layout/Gap.vue';
 import InputLabelVue from '@/components/presentation/InputLabel.vue';
 import RadioBoxesVue from '@/components/forms/RadioBoxes.vue';
 import AlertBoxVue from '@/components/presentation/AlertBox.vue';
+import CitationListVue from '@/components/presentation/CitationList.vue';
 
 export default {
 	name: 'Home',
-	components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonButton, IonSpinner, IonList, IonItem, IonThumbnail, IonImg, IonLabel, MainContentVue, GapVue, InputLabelVue, RadioBoxesVue, AlertBoxVue },
+	components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonInput, IonButton, IonSpinner, MainContentVue, GapVue, InputLabelVue, RadioBoxesVue, AlertBoxVue, CitationListVue },
 	data() {
 		return {
 			citationFormat: 'mla',
@@ -160,8 +124,7 @@ export default {
 			searchLoading: false,
 			searchError: '',
 			searchErrorShow: false,
-			searchResults: [],
-			searchResultsSourceType: 'webpage'
+			searchResults: []
 		}
 	},
 	computed: {
@@ -187,13 +150,6 @@ export default {
 					};
 			}
 			return {};
-		},
-		sourceTypeIcon() {
-			switch (this.sourceType) {
-				case 'webpage': return 'globe';
-				case 'book': return 'book';
-			}
-			return '';
 		},
 		showPasteButton() {
 			// Only show paste button if supported by platform
@@ -253,8 +209,13 @@ export default {
 				// Show results
 				if (apiResponse.ok) {
 					if (apiResponseJson.length > 0) {
-						this.searchResults = apiResponseJson;
-						this.searchResultsSourceType = this.sourceType;
+						this.searchResults = apiResponseJson.map(source => {
+							return {
+								format: this.citationFormat,
+								type: this.sourceType,
+								source
+							}
+						});
 						this.searchError = '';
 					} else {
 						this.searchError = 'We did not find any results for your search. Please check your input and try again.';
@@ -268,37 +229,6 @@ export default {
 				this.searchLoading = false;
 				if (this.searchError) this.searchErrorShow = true;
 			}
-		},
-		searchResultAuthors(authorArray) {
-			// Format author name list
-			if (!authorArray) return null;
-			const names = authorArray.map(author => {
-				let name = '';
-				if (author.first && author.middle && author.last) {
-					name = `${author.first} ${author.middle} ${author.last}`;
-					if (author.suffix) name += ` ${author.suffix}`;
-				} else if (author.first && author.last) {
-					name = `${author.first} ${author.last}`;
-					if (author.suffix) name += ` ${author.suffix}`;
-				} else if (author.last) {
-					name = author.last;
-				} else if (author.first) {
-					name = author.first;
-				}
-				return name || null;
-			}).filter(name => name !== null);
-			if (names.length === 2) {
-				return names.join(' and ');
-			}
-			return names.join(', ');
-		},
-		citeSource(source) {
-			this.$store.commit('setCitationInfo', {
-				format: this.citationFormat,
-				type: this.searchResultsSourceType,
-				source: JSON.parse(JSON.stringify(source))
-			});
-			this.$router.push('/home/citation');
 		}
 	},
 	async created() {
@@ -314,31 +244,3 @@ export default {
 	}
 }
 </script>
-
-<style lang="scss" scoped>
-.search-results {
-	margin: 0 var(--revert-content-padding);
-	.search-result {
-		&__thumbnail {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			color: var(--ion-color-secondary);
-			background: rgba(var(--ion-color-secondary-rgb), .2);
-		}
-		&__icon {
-			opacity: .5;
-		}
-		&__title,
-		&__authors {
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			overflow: hidden;
-		}
-		&__authors {
-			font-size: .8em;
-			color: var(--ion-color-medium);
-		}
-	}
-}
-</style>
