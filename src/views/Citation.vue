@@ -322,6 +322,7 @@ export default {
 		margin-bottom: calc(var(--gap-base) * 2);
 	}
 	&__citation {
+		font-size: 14px;
 		font-family: sans-serif;
 		color: black;
 		padding-left: 2rem;
