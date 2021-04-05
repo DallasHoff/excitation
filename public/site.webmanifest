@@ -106,10 +106,10 @@
             ]
         },
         {
-            "name": "Citation History",
-            "short_name": "History",
-            "description": "Go to the list of citations you have generated",
-            "url": "/history",
+            "name": "Saved Citations",
+            "short_name": "Saved",
+            "description": "Go to the list of citations you have saved",
+            "url": "/saved",
             "icons": [
                 {
                     "src": "/assets/icon/favicon.svg",

@@ -20,8 +20,8 @@ const routes: Array<RouteRecordRaw> = [
 				component: () => import('@/views/Citation.vue')
 			},
 			{
-				path: 'history',
-				component: () => import('@/views/History.vue')
+				path: 'saved',
+				component: () => import('@/views/Saved.vue')
 			},
 			{
 				path: '/:catchAll(.*)',

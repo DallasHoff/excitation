@@ -24,25 +24,35 @@
 					<gap-vue :size="4"></gap-vue>
 
 					<div class="citation-box">
-
 						<div class="citation-box__header">
-							<div class="citation-chips">
-								<div 
-								v-if="citationInfo?.format"
-								class="citation-chips__chip">
-									{{ citationFormats[citationInfo.format] }}
-								</div>
-								<div 
-								v-if="citationInfo?.type"
-								class="citation-chips__chip">
-									{{ sourceTypes[citationInfo.type] }}
-								</div>
+							<div 
+							v-if="citationInfo?.format"
+							class="citation-chip">
+								{{ citationFormats[citationInfo.format] }}
 							</div>
+							<gap-vue :size="2" direction="inline" v-if="citationInfo?.format"></gap-vue>
+							<div 
+							v-if="citationInfo?.type"
+							class="citation-chip">
+								{{ sourceTypes[citationInfo.type] }}
+							</div>
+						</div>
+						
+						<gap-vue :size="4"></gap-vue>
+						<p 
+						class="citation-box__citation" 
+						ref="citation" 
+						v-html="citation">
+						</p>
+						<gap-vue :size="4"></gap-vue>
+
+						<div class="citation-box__footer">
 							<ion-button 
 							type="button" 
 							size="small" 
 							@click="copyCitation()" 
-							class="normal citation-box__copy-button">
+							:disabled="copyButtonState !== 'ready'" 
+							class="normal citation-box__button">
 								<span v-if="copyButtonState === 'success'">
 									<fa :icon="['far', 'check']"></fa>
 									<gap-vue direction="inline"></gap-vue>
@@ -54,14 +64,25 @@
 									Copy
 								</span>
 							</ion-button>
+							<gap-vue :size="2" direction="inline"></gap-vue>
+							<ion-button 
+							type="button" 
+							size="small" 
+							@click="saveCitation()" 
+							:disabled="saveButtonState !== 'ready'" 
+							class="normal citation-box__button">
+								<span v-if="saveButtonState === 'success'">
+									<fa :icon="['far', 'check']"></fa>
+									<gap-vue direction="inline"></gap-vue>
+									Saved!
+								</span>
+								<span v-else>
+									<fa :icon="['far', 'bookmark']"></fa>
+									<gap-vue direction="inline"></gap-vue>
+									Save
+								</span>
+							</ion-button>
 						</div>
-
-						<p 
-						class="citation-box__citation" 
-						ref="citation" 
-						v-html="citation">
-						</p>
-
 					</div>
 
                 </section>
@@ -196,8 +217,8 @@ import InputLabelVue from '@/components/presentation/InputLabel.vue';
 import GapVue from '@/components/layout/Gap.vue';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { faPlus, faTimes, faCopy, faCheck } from '@fortawesome/pro-regular-svg-icons';
-library.add(faPlus, faTimes, faCopy, faCheck);
+import { faPlus, faTimes, faCopy, faBookmark, faCheck } from '@fortawesome/pro-regular-svg-icons';
+library.add(faPlus, faTimes, faCopy, faBookmark, faCheck);
 
 export default {
 	name: 'Citation',
@@ -205,6 +226,7 @@ export default {
 	data() {
 		return {
 			citation: 'Harwood, W. (2015, April 22). <i>How NASA fixed Hubble\'s flawed vision - and reputation</i>. Retrieved from https://www.cbsnews.com/news/an-ingenius-fix-for-hubbles-famously-flawed-vision/ [EXAMPLE]', // TODO
+			saveButtonState: 'ready',
 			copyButtonState: 'ready'
 		}
 	},
@@ -253,6 +275,13 @@ export default {
 			setTimeout(() => {
 				this.copyButtonState = 'ready';
 			}, 3000);
+		},
+		saveCitation() {
+			// TODO: save functionality
+			this.saveButtonState = 'success';
+			setTimeout(() => {
+				this.saveButtonState = 'ready';
+			}, 3000);
 		}
 	},
 	created() {
@@ -283,11 +312,14 @@ export default {
 	padding: calc(var(--gap-base) * 4) calc(var(--gap-base) * 3);
 	background-color: rgba(233, 233, 233, .85);
 	border-radius: var(--border-radius);
-	&__header {
+	&__header,
+	&__footer {
 		display: flex;
+		flex-wrap: wrap;
+		margin-bottom: calc(var(--gap-base) * 2 * -1);
 	}
-	&__copy-button {
-		margin-left: auto;
+	&__button {
+		margin-bottom: calc(var(--gap-base) * 2);
 	}
 	&__citation {
 		font-family: sans-serif;
@@ -297,17 +329,13 @@ export default {
 		margin: 0;
 	}
 }
-.citation-chips {
-	display: flex;
-	flex-wrap: wrap;
-	&__chip {
-		margin: 0 calc(var(--gap-base) * 2) calc(var(--gap-base) * 4) 0;
-		padding: var(--gap-base) calc(var(--gap-base) * 2.5);
-		color: var(--ion-color-secondary-contrast);
-		background-color: var(--ion-color-secondary-shade);
-		border-radius: 14px;
-		white-space: nowrap;
-	}
+.citation-chip {
+	margin-bottom: calc(var(--gap-base) * 2);
+	padding: var(--gap-base) calc(var(--gap-base) * 2.5);
+	color: var(--ion-color-secondary-contrast);
+	background-color: var(--ion-color-secondary-shade);
+	border-radius: 14px;
+	white-space: nowrap;
 }
 .author-input-group {
 	display: grid;
