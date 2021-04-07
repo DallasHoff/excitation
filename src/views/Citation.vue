@@ -196,7 +196,7 @@
 							name="retrieved-time" 
 							display-format="DD MMM YYYY" 
 							min="2000" 
-							v-model="citationInfo.retrievedTime" 
+							v-model="citationInfo.sourceRetrievedTime" 
 							class="input-bordered">
 							</ion-datetime>
 						</input-label-vue>
@@ -277,11 +277,12 @@ export default {
 			}, 3000);
 		},
 		saveCitation() {
-			// TODO: save functionality
+			this.$store.commit('saveCitation', this.citationInfo);
 			this.saveButtonState = 'success';
 			setTimeout(() => {
 				this.saveButtonState = 'ready';
 			}, 3000);
+			this.$router.push('/saved');
 		}
 	},
 	created() {
@@ -300,7 +301,7 @@ export default {
 				return author;
 			});
 			// Initialize date retrieved with current date
-			this.citationInfo.retrievedTime = new Date().toISOString();
+			this.citationInfo.sourceRetrievedTime = new Date().toISOString();
 		}
 	}
 }

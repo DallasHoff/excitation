@@ -14,6 +14,10 @@ export default defineComponent({
 		IonApp,
 		IonRouterOutlet
 	},
+	created() {
+		// Initialize list of saved citations
+		this.$store.commit('initSavedCitations');
+	},
 	mounted() {
 		// Scroll content when keyboard opens or closes
 		window.addEventListener('ionKeyboardDidShow', () => {
