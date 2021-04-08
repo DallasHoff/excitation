@@ -233,7 +233,32 @@ export default {
     computed: {
 		citationInfo: {
 			get() {
-				return this.$store.state.citationInfo;
+				const citationInfo = this.$store.state.citationInfo;
+				// Add fields for author if none was found
+				if (!citationInfo.source.authors) {
+					citationInfo.source.authors = [
+						{
+							title: '',
+							first: '',
+							middle: '',
+							last: '',
+							suffix: '',
+							key: this.getRandomInt()
+						}
+					];
+				}
+				// Add keys for authors (needed for transitions)
+				citationInfo.source.authors = citationInfo.source.authors.map(author => {
+					if (!author.key) {
+						author.key = this.getRandomInt();
+					}
+					return author;
+				});
+				// Initialize date retrieved with current date
+				if (!citationInfo.sourceRetrievedTime) {
+					citationInfo.sourceRetrievedTime = new Date().toISOString();
+				}
+				return citationInfo;
 			},
 			set(value) {
 				this.$store.commit('setCitationInfo', value);
@@ -289,19 +314,6 @@ export default {
 		if (!this.citationInfo?.source) {
 			// Redirect to home if state has no citation info
 			this.$router.replace('/home');
-		} else {
-			// Add fields for author if none was found
-			if (!this.citationInfo.source.authors) {
-				this.citationInfo.source.authors = [];
-				this.addAuthor();
-			}
-			// Add keys for authors
-			this.citationInfo.source.authors = this.citationInfo.source.authors.map(author => {
-				author.key = this.getRandomInt();
-				return author;
-			});
-			// Initialize date retrieved with current date
-			this.citationInfo.sourceRetrievedTime = new Date().toISOString();
 		}
 	}
 }
