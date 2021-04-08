@@ -12,9 +12,11 @@
 				</ion-toolbar>
 			</ion-header>
 			
-			<centered-message-vue>
-				<strong>Coming Soon&hellip;</strong>
-			</centered-message-vue>
+			<main-content-vue>
+				<section>
+					<citation-list-vue :citation-set="savedCitations"></citation-list-vue>
+				</section>
+			</main-content-vue>
 			
 		</ion-content>
 	</ion-page>
@@ -22,10 +24,16 @@
 
 <script>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/vue';
-import CenteredMessageVue from '@/components/layout/CenteredMessage.vue';
+import CitationListVue from '@/components/presentation/CitationList.vue';
+import MainContentVue from '@/components/layout/MainContent.vue';
 
 export default {
 	name: 'Saved',
-	components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, CenteredMessageVue }
+	components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, CitationListVue, MainContentVue },
+	computed: {
+		savedCitations() {
+			return this.$store.state.savedCitations;
+		}
+	}
 }
 </script>
