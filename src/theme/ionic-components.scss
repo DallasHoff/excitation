@@ -27,5 +27,5 @@ ion-list.normal {
 }
 
 ion-item.normal {
-	--background: transparent;
+	--background: var(--ion-background-color);
 }

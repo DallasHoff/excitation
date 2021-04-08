@@ -46,6 +46,17 @@ const store = createStore({
 			} catch (err) {
 				console.warn(err);
 			}
+		},
+		async deleteCitation(state, index) {
+			// Remove citation by index
+			state.savedCitations.splice(index, 1);
+			// Update stored list
+			const updatedList = JSON.stringify(state.savedCitations);
+			try {
+				await Storage.set({key: savedCitationsStorageKey, value: updatedList});
+			} catch (err) {
+				console.warn(err);
+			}
 		}
 	}
 });

@@ -14,7 +14,10 @@
 			
 			<main-content-vue>
 				<section>
-					<citation-list-vue :citation-set="savedCitations"></citation-list-vue>
+					<citation-list-vue 
+					:citation-set="savedCitations" 
+					enable-sliding>
+					</citation-list-vue>
 				</section>
 			</main-content-vue>
 			

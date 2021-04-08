@@ -1,46 +1,58 @@
 <template>
     <ion-list class="citation-list normal">
         <transition-group name="v-fade-left">
-            <ion-item 
-            button 
-            detail 
-            v-for="(citation, index) in citationSet" 
-            :key="citation.source.url" 
-            @click="cite(citation)" 
-            class="citation-list__citation normal" 
-            :style="{'transition-delay': (40 * index) + 'ms'}">
-                <ion-thumbnail 
-                class="citation-list__citation__thumbnail" 
-                slot="start">
-                    <ion-img 
-                    v-if="citation.source.image" 
-                    :src="citation.source.image" 
-                    alt="">
-                    </ion-img>
-                    <fa 
-                    v-else 
-                    :icon="['far', sourceTypeIcon(citation.type)]" 
-                    size="2x" 
-                    class="citation-list__citation__icon">
-                    </fa>
-                </ion-thumbnail>
-                <ion-label>
-                    <h3 class="citation-list__citation__title">
-                        {{ citation.source.title }}
-                    </h3>
-                    <div 
-                    v-if="searchResultAuthors(citation.source.authors)" 
-                    class="citation-list__citation__authors">
-                        By {{ searchResultAuthors(citation.source.authors) }}
-                    </div>
-                </ion-label>
-            </ion-item>
+			<ion-item-sliding 
+			v-for="(citation, index) in citationSet" 
+			:key="citation.source.url" 
+			:ref="'sliding-' + index" 
+			:disabled="enableSliding === false" 
+			:style="{'transition-delay': (40 * index) + 'ms'}">
+				<ion-item 
+				button 
+				detail 
+				@click="cite(citation)" 
+				@contextmenu.prevent="openDeleteOption('sliding-' + index)" 
+				class="citation-list__citation normal">
+					<ion-thumbnail 
+					class="citation-list__citation__thumbnail" 
+					slot="start">
+						<ion-img 
+						v-if="citation.source.image" 
+						:src="citation.source.image" 
+						alt="">
+						</ion-img>
+						<fa 
+						v-else 
+						:icon="['far', sourceTypeIcon(citation.type)]" 
+						size="2x" 
+						class="citation-list__citation__icon">
+						</fa>
+					</ion-thumbnail>
+					<ion-label>
+						<h3 class="citation-list__citation__title">
+							{{ citation.source.title }}
+						</h3>
+						<div 
+						v-if="searchResultAuthors(citation.source.authors)" 
+						class="citation-list__citation__authors">
+							By {{ searchResultAuthors(citation.source.authors) }}
+						</div>
+					</ion-label>
+				</ion-item>
+				<ion-item-options side="end">
+					<ion-item-option 
+					color="danger"
+					@click="deleteCitation(index)">
+						Delete
+					</ion-item-option>
+				</ion-item-options>
+			</ion-item-sliding>
         </transition-group>
     </ion-list>
 </template>
 
 <script>
-import { IonList, IonItem, IonThumbnail, IonImg, IonLabel } from '@ionic/vue';
+import { IonList, IonItem, IonThumbnail, IonImg, IonLabel, IonItemSliding, IonItemOptions, IonItemOption } from '@ionic/vue';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faGlobe, faBook } from '@fortawesome/pro-regular-svg-icons';
@@ -48,12 +60,16 @@ library.add(faGlobe, faBook);
 
 export default {
     name: 'CitationList',
-    components: { IonList, IonItem, IonThumbnail, IonImg, IonLabel },
+    components: { IonList, IonItem, IonThumbnail, IonImg, IonLabel, IonItemSliding, IonItemOptions, IonItemOption },
     props: {
         citationSet: {
             type: Array,
             default: () => []
-        }
+        },
+		enableSliding: {
+			type: Boolean,
+			default: false
+		}
     },
     methods: {
 		sourceTypeIcon(sourceType) {
@@ -85,6 +101,14 @@ export default {
 				return names.join(' and ');
 			}
 			return names.join(', ');
+		},
+		openDeleteOption(ref) {
+			if (this.enableSliding === true) {
+				this.$refs[ref].$el.open('end');
+			}
+		},
+		deleteCitation(index) {
+			this.$store.commit('deleteCitation', index);
 		},
 		cite(citation) {
 			this.$store.commit('setCitationInfo', JSON.parse(JSON.stringify(citation)));
