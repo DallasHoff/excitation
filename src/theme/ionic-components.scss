@@ -1,18 +1,24 @@
 /* Customization of Ionic components */
 
-ion-input.input-bordered,
-ion-datetime.input-bordered {
+ion-input.theme-input,
+ion-datetime.theme-input {
 	--padding-start: .6em;
 	--padding-end: .6em;
-	--padding-top: .6em;
-	--padding-bottom: .6em;
-	background: rgba(var(--ion-color-medium-rgb), .2);
-	border: 2px solid rgba(var(--ion-color-medium-rgb), .6);
+	--padding-top: .8em;
+	--padding-bottom: .8em;
+	background-color: rgba(var(--ion-color-medium-rgb), .2);
+	background-image: var(--theme-box-gradient);
+	box-shadow: var(--theme-box-shadow);
 	border-radius: var(--border-radius);
 }
 
 ion-button.normal {
 	margin: 0;
+}
+
+ion-button.theme-button-primary {
+	--background: var(--theme-box-gradient-primary);
+	--box-shadow: var(--theme-box-shadow);
 }
 
 ion-button.button-under-input {

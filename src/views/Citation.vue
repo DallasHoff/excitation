@@ -52,7 +52,7 @@
 							size="small" 
 							@click="copyCitation()" 
 							:disabled="copyButtonState !== 'ready'" 
-							class="normal citation-box__button">
+							class="citation-box__button normal theme-button-primary">
 								<span v-if="copyButtonState === 'success'">
 									<fa :icon="['far', 'check']"></fa>
 									<gap-vue direction="inline"></gap-vue>
@@ -70,7 +70,7 @@
 							size="small" 
 							@click="saveCitation()" 
 							:disabled="saveButtonState !== 'ready'" 
-							class="normal citation-box__button">
+							class="citation-box__button normal theme-button-primary">
 								<span v-if="saveButtonState === 'success'">
 									<fa :icon="['far', 'check']"></fa>
 									<gap-vue direction="inline"></gap-vue>
@@ -97,7 +97,7 @@
 						type="text" 
 						inputmode="text" 
 						v-model="citationInfo.source.title" 
-						class="input-bordered">
+						class="theme-input">
 						</ion-input>
 					</input-label-vue>
 					<gap-vue :size="6"></gap-vue>
@@ -115,7 +115,7 @@
 									type="text" 
 									inputmode="text" 
 									v-model="author.first" 
-									class="input-bordered">
+									class="theme-input">
 									</ion-input>
 								</input-label-vue>
 								<input-label-vue text="Middle">
@@ -124,7 +124,7 @@
 									type="text" 
 									inputmode="text" 
 									v-model="author.middle" 
-									class="input-bordered">
+									class="theme-input">
 									</ion-input>
 								</input-label-vue>
 								<input-label-vue text="Last">
@@ -133,7 +133,7 @@
 									type="text" 
 									inputmode="text" 
 									v-model="author.last" 
-									class="input-bordered">
+									class="theme-input">
 									</ion-input>
 								</input-label-vue>
 								<input-label-vue text="Suffix">
@@ -142,7 +142,7 @@
 									type="text" 
 									inputmode="text" 
 									v-model="author.suffix" 
-									class="input-bordered">
+									class="theme-input">
 									</ion-input>
 								</input-label-vue>
 								<ion-button 
@@ -174,7 +174,7 @@
 						type="text" 
 						inputmode="text" 
 						v-model="citationInfo.source.publisher" 
-						class="input-bordered">
+						class="theme-input">
 						</ion-input>
 					</input-label-vue>
 					<gap-vue :size="6"></gap-vue>
@@ -185,7 +185,7 @@
 						display-format="DD MMM YYYY" 
 						min="1600" 
 						v-model="citationInfo.source.publishedTime" 
-						class="input-bordered">
+						class="theme-input">
 						</ion-datetime>
 					</input-label-vue>
 					<gap-vue :size="6"></gap-vue>
@@ -197,7 +197,7 @@
 							display-format="DD MMM YYYY" 
 							min="2000" 
 							v-model="citationInfo.sourceRetrievedTime" 
-							class="input-bordered">
+							class="theme-input">
 							</ion-datetime>
 						</input-label-vue>
 						<gap-vue :size="6"></gap-vue>
@@ -332,6 +332,8 @@ export default {
 	user-select: text;
 	padding: calc(var(--gap-base) * 4) calc(var(--gap-base) * 3);
 	background-color: rgba(233, 233, 233, .85);
+	background-image: linear-gradient(180deg, rgb(241 241 241 / 80%), rgb(210 210 210 / 80%));
+	box-shadow: var(--theme-box-shadow);
 	border-radius: var(--border-radius);
 	&__header,
 	&__footer {
@@ -356,6 +358,7 @@ export default {
 	padding: var(--gap-base) calc(var(--gap-base) * 2.5);
 	color: var(--ion-color-secondary-contrast);
 	background-color: var(--ion-color-secondary-shade);
+	box-shadow: var(--theme-box-shadow);
 	border-radius: 14px;
 	white-space: nowrap;
 }

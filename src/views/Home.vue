@@ -48,7 +48,7 @@
 							clear-input 
 							required 
 							v-model="query" 
-							class="search-field input-bordered">
+							class="search-field theme-input">
 							</ion-input>
 						</input-label-vue>
 						<ion-button 
@@ -68,7 +68,7 @@
 						type="submit" 
 						expand="block" 
 						:disabled="searchLoading" 
-						class="search-button normal">
+						class="search-button normal theme-button-primary">
 							<ion-spinner name="dots" v-if="searchLoading"></ion-spinner>
 							<span v-else>
 								<fa :icon="['far', 'search']"></fa>

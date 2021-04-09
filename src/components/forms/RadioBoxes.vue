@@ -49,15 +49,16 @@ export default {
         padding: calc(var(--gap-base) * 3);
         margin-bottom: calc(var(--gap-base) * 3);
         background-color: rgba(var(--ion-color-medium-rgb), .2);
-        border: 2px solid rgba(var(--ion-color-medium-rgb), .6);
+        background-image: var(--theme-box-gradient);
+        box-shadow: var(--theme-box-shadow);
         border-radius: var(--border-radius);
-        transition: background-color 200ms, border-color 200ms;
         &:not(:last-child) {
             margin-right: calc(var(--gap-base) * 3);
         }
         &--checked {
+            color: white;
             background-color: rgba(var(--ion-color-primary-rgb), .2);
-            border-color: rgba(var(--ion-color-primary-rgb), .6);
+            background-image: var(--theme-box-gradient-primary);
         }
     }
 }
