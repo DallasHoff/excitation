@@ -23,7 +23,7 @@
 
 			<centered-message-vue v-else>
 				<p>You do not have any citations saved. Once you save some citations, you will be able to refer to them here.</p>
-                <ion-button @click="$router.push('/home')">Make a Citation</ion-button>
+                <ion-button class="theme-button-primary" @click="$router.push('/home')">Make a Citation</ion-button>
 			</centered-message-vue>
 			
 		</ion-content>
