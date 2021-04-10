@@ -317,12 +317,6 @@ export default {
 			}, 3000);
 			this.$router.push('/saved');
 		}
-	},
-	created() {
-		if (!this.citationInfo?.source) {
-			// Redirect to home if state has no citation info
-			this.$router.replace('/home');
-		}
 	}
 }
 </script>

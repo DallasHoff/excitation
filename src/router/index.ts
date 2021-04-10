@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
 import { RouteRecordRaw } from 'vue-router';
+import store from '../store';
 import Tabs from '../views/Tabs.vue';
 
 const routes: Array<RouteRecordRaw> = [
@@ -17,7 +18,13 @@ const routes: Array<RouteRecordRaw> = [
 			},
 			{
 				path: 'home/citation',
-				component: () => import('@/views/Citation.vue')
+				component: () => import('@/views/Citation.vue'),
+				beforeEnter: () => {
+					// Redirect to home if state has no citation info
+					if (!store.state.citationInfo?.source) {
+						return '/home';
+					}
+				}
 			},
 			{
 				path: 'saved',
