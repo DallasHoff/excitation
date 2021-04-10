@@ -8,12 +8,13 @@ ion-datetime.theme-input {
 	--padding-bottom: .8em;
 	background-color: rgba(var(--ion-color-medium-rgb), .2);
 	background-image: var(--theme-box-gradient-inset);
-	box-shadow: var(--theme-box-shadow);
+	box-shadow: var(--theme-box-shadow-inset);
 	border-radius: var(--border-radius);
 }
 
 ion-button.normal {
 	margin: 0;
+	--background-hover: var(--background);
 }
 
 ion-button.theme-button-primary {
@@ -21,6 +22,7 @@ ion-button.theme-button-primary {
 	--box-shadow: var(--theme-box-shadow);
 	&:active {
 		--background: var(--theme-box-gradient-primary-inset);
+		--box-shadow: var(--theme-box-shadow-inset);
 	}
 }
 

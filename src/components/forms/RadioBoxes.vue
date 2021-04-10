@@ -11,7 +11,11 @@
             :value="value" 
             :checked="modelValue === value" 
             @input="$emit('update:modelValue', $event.target.value)" />
-            <gap-vue direction="inline"></gap-vue>
+            <div 
+            class="radio-boxes__box__button" 
+            :class="{'radio-boxes__box__button--checked': modelValue === value}">
+            </div>
+            <gap-vue direction="inline" :size="2"></gap-vue>
             {{ text }}
         </label>
     </div>
@@ -45,18 +49,22 @@ export default {
     display: flex;
     flex-wrap: wrap;
     &__box {
+        --button-size: 20px;
         cursor: pointer;
+        display: flex;
         padding: calc(var(--gap-base) * 3);
         margin-bottom: calc(var(--gap-base) * 3);
         background-color: rgba(var(--ion-color-medium-rgb), .2);
         background-image: var(--theme-box-gradient);
         box-shadow: var(--theme-box-shadow);
         border-radius: var(--border-radius);
+        line-height: var(--button-size);
         &:not(:last-child) {
             margin-right: calc(var(--gap-base) * 3);
         }
         &:active {
             background-image: var(--theme-box-gradient-inset);
+            box-shadow: var(--theme-box-shadow-inset);
         }
         &--checked {
             color: white;
@@ -65,6 +73,39 @@ export default {
             &:active {
                 background-image: var(--theme-box-gradient-primary-inset);
             }
+        }
+        &__button {
+            position: relative;
+            width: var(--button-size);
+            height: var(--button-size);
+            background-image: var(--theme-box-gradient-inset);
+            box-shadow: var(--theme-box-shadow-inset);
+            border-radius: 50%;
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                width: calc(var(--button-size) / 2);
+                height: calc(var(--button-size) / 2);
+                margin: auto;
+                background-color: white;
+                box-shadow: var(--theme-box-shadow);
+                border-radius: 50%;
+                transform: scale(0);
+                transition: transform 300ms;
+            }
+            &--checked {
+                background-image: var(--theme-box-gradient-primary-inset);
+                &::before {
+                    transform: scale(1);
+                }
+            }
+        }
+        input {
+            display: none;
         }
     }
 }

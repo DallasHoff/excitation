@@ -14,7 +14,7 @@
             
             <centered-message-vue>
                 <p>Oops. The page that you navigated to does not exist.</p>
-                <ion-button class="theme-button-primary" @click="$router.go(-1)">Go Back</ion-button>
+                <ion-button class="theme-button-primary normal" @click="$router.go(-1)">Go Back</ion-button>
             </centered-message-vue>
 
 		</ion-content>
