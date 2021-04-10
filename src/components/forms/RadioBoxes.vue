@@ -55,10 +55,16 @@ export default {
         &:not(:last-child) {
             margin-right: calc(var(--gap-base) * 3);
         }
+        &:active {
+            background-image: var(--theme-box-gradient-inset);
+        }
         &--checked {
             color: white;
             background-color: rgba(var(--ion-color-primary-rgb), .2);
             background-image: var(--theme-box-gradient-primary);
+            &:active {
+                background-image: var(--theme-box-gradient-primary-inset);
+            }
         }
     }
 }
