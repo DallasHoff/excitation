@@ -358,6 +358,7 @@ export default {
 	padding: var(--gap-base) calc(var(--gap-base) * 2.5);
 	color: var(--ion-color-secondary-contrast);
 	background-color: var(--ion-color-secondary-shade);
+	background-image: var(--theme-box-gradient-secondary);
 	box-shadow: var(--theme-box-shadow);
 	border-radius: 14px;
 	white-space: nowrap;
