@@ -39,11 +39,10 @@
 						</div>
 						
 						<gap-vue :size="4"></gap-vue>
-						<p 
-						class="citation-box__citation" 
-						ref="citation" 
-						v-html="citation">
-						</p>
+						<citation-vue 
+						:citation-info="citationInfo" 
+						ref="citation">
+						</citation-vue>
 						<gap-vue :size="4"></gap-vue>
 
 						<div class="citation-box__footer">
@@ -215,6 +214,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBa
 import MainContentVue from '@/components/layout/MainContent.vue';
 import InputLabelVue from '@/components/presentation/InputLabel.vue';
 import GapVue from '@/components/layout/Gap.vue';
+import CitationVue from '@/components/presentation/Citation.vue';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faPlus, faTimes, faCopy, faBookmark, faCheck } from '@fortawesome/pro-regular-svg-icons';
@@ -222,10 +222,9 @@ library.add(faPlus, faTimes, faCopy, faBookmark, faCheck);
 
 export default {
 	name: 'Citation',
-	components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput, IonDatetime, IonButton, MainContentVue, InputLabelVue, GapVue },
+	components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput, IonDatetime, IonButton, MainContentVue, InputLabelVue, GapVue, CitationVue },
 	data() {
 		return {
-			citation: 'Harwood, W. (2015, April 22). <i>How NASA fixed Hubble\'s flawed vision - and reputation</i>. Retrieved from https://www.cbsnews.com/news/an-ingenius-fix-for-hubbles-famously-flawed-vision/ [EXAMPLE]', // TODO
 			saveButtonState: 'ready',
 			copyButtonState: 'ready'
 		}
@@ -295,7 +294,7 @@ export default {
 			this.citationInfo?.source?.authors?.splice(index, 1);
 		},
 		copyCitation() {
-			const copyHTML = this.$refs.citation.innerHTML;
+			const copyHTML = this.$refs.citation.$el.innerHTML;
 			function listener(evt) {
 				evt.clipboardData.setData('text/html', copyHTML);
 				evt.clipboardData.setData('text/plain', copyHTML);
@@ -323,7 +322,6 @@ export default {
 
 <style lang="scss" scoped>
 .citation-box {
-	user-select: text;
 	padding: calc(var(--gap-base) * 4) calc(var(--gap-base) * 3);
 	background-color: rgba(233, 233, 233, .85);
 	background-image: linear-gradient(180deg, rgb(241 241 241 / 80%), rgb(210 210 210 / 80%));
@@ -337,14 +335,6 @@ export default {
 	}
 	&__button {
 		margin-bottom: calc(var(--gap-base) * 2);
-	}
-	&__citation {
-		font-size: 14px;
-		font-family: sans-serif;
-		color: black;
-		padding-left: 2rem;
-		text-indent: -2rem;
-		margin: 0;
 	}
 }
 .citation-chip {
