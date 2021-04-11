@@ -11,9 +11,162 @@ export default {
             required: true
         }
     },
-    data() {
-        return {
-            citation: 'Harwood, W. (2015, April 22). <i>How NASA fixed Hubble\'s flawed vision - and reputation</i>. Retrieved from https://www.cbsnews.com/news/an-ingenius-fix-for-hubbles-famously-flawed-vision/ [EXAMPLE]'
+    methods: {
+        dateInfo(timestamp) {
+            const date = new Date(timestamp);
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const parts = {
+                D: date.getDate() <= 9 ? '0' + date.getDate() : date.getDate(),
+                d: date.getDate(),
+                M: months[date.getMonth()],
+                m: monthsShort[date.getMonth()],
+                Y: date.getFullYear()
+            };
+            const formats = {
+                dmY: `${parts.d} ${parts.m}. ${parts.Y}`
+            };
+            return {
+                ...parts,
+                ...formats
+            };
+        }
+    },
+    computed: {
+        citationFormat() {
+            return this.citationInfo.format;
+        },
+        sourceType() {
+            return this.citationInfo.type;
+        },
+        pubDate() {
+            return this.dateInfo(this.citationInfo.source.publishedTime);
+        },
+        modDate() {
+            return this.dateInfo(this.citationInfo.source.modifiedTime);
+        },
+        accessDate() {
+            return this.dateInfo(this.citationInfo.sourceRetrievedTime);
+        },
+        authors() {
+            let authors = '';
+            const authorList = this.citationInfo.source.authors;
+            const num = authorList.length;
+
+            const initial = name => name ? name.charAt(0) + '.' : '';
+            const p = (authorIndex, partKey, format) => {
+                /* format parameter allows invocations of p to be composed in a way that
+                   other parts of the name are dependent on the outer invocation's part
+                   (e.g. not showing the middle name unless the first name is supplied). 
+                   This is also the way to tie commas, spaces, and other separators
+                   to the name part. If the name part is not supplied, nothing will output. 
+                   % in the format string is where the name part will be placed. */
+                let part = '';
+                const nameObj = authorList[authorIndex];
+                if (!nameObj) return part;
+                const { first, middle, last, suffix } = nameObj;
+                const parts = {
+                    F: !!first && first.length === 1 ? initial(first) : first,
+                    M: !!middle && middle.length === 1 ? initial(middle) : middle,
+                    L: !!last && last.length === 1 ? initial(last) : last,
+                    S: !!suffix && suffix.length === 1 ? initial(suffix) : suffix,
+                    f: initial(first),
+                    m: initial(middle),
+                    l: initial(last),
+                    s: initial(suffix)
+                };
+                if (partKey in parts && !!parts[partKey]) {
+                    part = format ? format.replaceAll('%', parts[partKey]) : parts[partKey];
+                }
+                return part;
+            };
+
+            switch (this.citationFormat) {
+
+                case 'mla': {
+                    const firstAuthor = p(0,'L',`%${p(0,'F',`, %${p(0,'m',` %`)}`)}${p(0,'S',`, %`)}`);
+                    const secondAuthor = p(1,'L',`${p(1,'F',`%${p(1,'m',` %`)} `)}%${p(1,'S',` %`)}`);
+                    if (num === 1) {
+                        authors = firstAuthor;
+                    } else if (num === 2) {
+                        authors = `${firstAuthor} and ${secondAuthor}`;
+                    } else if (num >= 3) {
+                        authors = `${firstAuthor}, et al`;
+                    }
+                    if (authors && authors.slice(-1) !== '.') {
+                        authors += '.';
+                    }
+                    break;
+                }
+
+                case 'apa': {
+                    authors = `[APA]`;
+                    break;
+                }
+
+                case 'chicago': {
+                    authors = `[Chicago]`;
+                    break;
+                }
+                
+            }
+
+            return authors;
+        },
+        citation() {
+            let citation = '';
+            const { title, publisher, url } = this.citationInfo.source;
+
+            const f = (str, format) => str ? format.replaceAll('%', str) : '';
+            const j = (str1, sep, str2) => `${str1}${str1 && str2 ? sep : ''}${str2}`;
+
+            switch (this.citationFormat) {
+
+                case 'mla': {
+                    switch (this.sourceType) {
+                        case 'webpage': {
+                            citation = `${f(this.authors,'% ')}${f(title,'&ldquo;%.&rdquo;')}${j(j(f(publisher,' <cite>%</cite>'),',',f(this.pubDate.dmY,' %')),',',f(url,' %'))}`;
+                            break;
+                        }
+                        case 'book': {
+                            citation = `[MLA Book]`;
+                            break;
+                        }
+                    }
+                    break;
+                }
+
+                case 'apa': {
+                    switch (this.sourceType) {
+                        case 'webpage': {
+                            citation = `[APA Webpage]`;
+                            break;
+                        }
+                        case 'book': {
+                            citation = `[APA Book]`;
+                            break;
+                        }
+                    }
+                    break;
+                }
+
+                case 'chicago': {
+                    switch (this.sourceType) {
+                        case 'webpage': {
+                            citation = `[Chicago Webpage]`;
+                            break;
+                        }
+                        case 'book': {
+                            citation = `[Chicago Book]`;
+                            break;
+                        }
+                    }
+                    break;
+                }
+
+            }
+
+            return citation;
         }
     }
 }
