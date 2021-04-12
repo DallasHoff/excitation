@@ -13,6 +13,7 @@ export default {
     },
     methods: {
         dateInfo(timestamp) {
+            if (!timestamp) return null;
             const date = new Date(timestamp);
             const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -125,11 +126,11 @@ export default {
                 case 'mla': {
                     switch (this.sourceType) {
                         case 'webpage': {
-                            citation = `${f(this.authors,'% ')}${f(title,'&ldquo;%.&rdquo;')}${j(j(f(publisher,' <cite>%</cite>'),',',f(this.pubDate.dmY,' %')),',',f(url,' %'))}`;
+                            citation = `${f(this.authors,'% ')}${f(title,'&ldquo;%.&rdquo;')}${j(j(f(publisher,' <cite>%</cite>'),',',f(this.pubDate?.dmY,' %')),',',f(url,' %'))}${publisher || this.pubDate?.dmY || url ? '.' : ''}${!this.pubDate?.dmY ? f(this.accessDate?.dmY,' Accessed %.') : ''}`;
                             break;
                         }
                         case 'book': {
-                            citation = `[MLA Book]`;
+                            citation = `${f(this.authors,'% ')}${f(title,'<cite>%.</cite>')}${j(f(publisher,' %'),',',f(this.pubDate?.Y,' %'))}${publisher || this.pubDate?.Y ? '.' : ''}`;
                             break;
                         }
                     }
