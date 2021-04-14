@@ -101,7 +101,21 @@ export default {
                 }
 
                 case 'apa': {
-                    authors = `[APA]`;
+                    const formattedAuthors = authorList.map((a, i) => p(i,'L',`%${p(i,'f',`, %${p(i,'m',` %`)}`)}${p(i,'S',`, %`)}`));
+                    if (num === 1) {
+                        authors = formattedAuthors[0];
+                    } else if (num >= 2 && num <= 20) {
+                        formattedAuthors[formattedAuthors.length - 1] = `&amp; ${formattedAuthors[formattedAuthors.length - 1]}`;
+                        authors = formattedAuthors.join(', ');
+                    } else if (num > 20) {
+                        const lastAuthor = `&hellip; ${formattedAuthors[formattedAuthors.length - 1]}`;
+                        const twentyAuthors = formattedAuthors.slice(0, 19);
+                        twentyAuthors.push(lastAuthor);
+                        authors = twentyAuthors.join(', ');
+                    }
+                    if (authors && authors.slice(-1) !== '.') {
+                        authors += '.';
+                    }
                     break;
                 }
 
@@ -143,7 +157,7 @@ export default {
                 case 'apa': {
                     switch (this.sourceType) {
                         case 'webpage': {
-                            citation = `[APA Webpage]`;
+                            citation = `${this.authors}`;
                             break;
                         }
                         case 'book': {
