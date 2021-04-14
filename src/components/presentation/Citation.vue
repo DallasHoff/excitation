@@ -25,7 +25,9 @@ export default {
                 Y: date.getFullYear()
             };
             const formats = {
-                dmY: `${parts.d} ${parts.m}. ${parts.Y}`
+                dmY: `${parts.d} ${parts.m}. ${parts.Y}`,
+                YMd: `${parts.Y}, ${parts.M} ${parts.d}`,
+                MdY: `${parts.M} ${parts.d}, ${parts.Y}`
             };
             return {
                 ...parts,
@@ -172,7 +174,11 @@ export default {
                 case 'apa': {
                     switch (this.sourceType) {
                         case 'webpage': {
-                            citation = `${this.authors}`;
+                            if (!this.authors) {
+                                citation = `${f(title,'<cite>%.</cite>')}${f(this.pubDate?.YMd || 'n.d.',' (%).')}${f(publisher,' %.')}${f(url,` ${f(this.accessDate?.MdY,'Retrieved %, from ')}%`)}`;
+                            } else {
+                                citation = `${f(this.authors,'% ')}${f(this.pubDate?.YMd || 'n.d.','(%). ')}${f(title,'<cite>%.</cite>')}${f(publisher,' %.')}${f(url,` ${f(this.accessDate?.MdY,'Retrieved %, from ')}%`)}`;
+                            }
                             break;
                         }
                         case 'book': {
