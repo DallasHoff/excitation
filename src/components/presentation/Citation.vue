@@ -120,7 +120,22 @@ export default {
                 }
 
                 case 'chicago': {
-                    authors = `[Chicago]`;
+                    const firstAuthor = p(0,'L',`%${p(0,'F',`, %${p(0,'m',` %`)}`)}${p(0,'S',`, %`)}`);
+                    const formattedAuthors = authorList.map((a, i) => p(i,'L',`${p(i,'F',`%${p(i,'m',` %`)} `)}%${p(i,'S',` %`)}`));
+                    if (num === 1) {
+                        authors = firstAuthor;
+                    } else if (num >= 2 && num <= 10) {
+                        formattedAuthors[0] = firstAuthor;
+                        formattedAuthors[formattedAuthors.length - 1] = `and ${formattedAuthors[formattedAuthors.length - 1]}`;
+                        authors = formattedAuthors.join(', ');
+                    } else if (num > 10) {
+                        const sevenAuthors = formattedAuthors.slice(0, 7);
+                        sevenAuthors[0] = firstAuthor;
+                        authors = `${sevenAuthors.join(', ')}, et al`;
+                    }
+                    if (authors && authors.slice(-1) !== '.') {
+                        authors += '.';
+                    }
                     break;
                 }
                 
@@ -161,7 +176,7 @@ export default {
                             break;
                         }
                         case 'book': {
-                            citation = `[APA Book]`;
+                            citation = `${this.authors}`;
                             break;
                         }
                     }
@@ -171,11 +186,11 @@ export default {
                 case 'chicago': {
                     switch (this.sourceType) {
                         case 'webpage': {
-                            citation = `[Chicago Webpage]`;
+                            citation = `${this.authors}`;
                             break;
                         }
                         case 'book': {
-                            citation = `[Chicago Book]`;
+                            citation = `${this.authors}`;
                             break;
                         }
                     }
