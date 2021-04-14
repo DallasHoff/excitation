@@ -23,64 +23,71 @@
 					<h1>Your Citation</h1>
 					<gap-vue :size="4"></gap-vue>
 
-					<div class="citation-box">
-						<div class="citation-box__header">
-							<div 
-							v-if="citationInfo?.format"
-							class="citation-chip">
-								{{ citationFormats[citationInfo.format] }}
+					<div 
+					class="citation-box" 
+					:class="{'citation-box--image': !!citationInfo?.source?.image}" 
+					:style="{'background-image': citationBoxImage}">
+						<div 
+						class="citation-box__inner" 
+						:class="{'citation-box__inner--image': !!citationInfo?.source?.image}">
+							<div class="citation-box__header">
+								<div 
+								v-if="citationInfo?.format"
+								class="citation-chip">
+									{{ citationFormats[citationInfo.format] }}
+								</div>
+								<gap-vue :size="2" direction="inline" v-if="citationInfo?.format"></gap-vue>
+								<div 
+								v-if="citationInfo?.type"
+								class="citation-chip">
+									{{ sourceTypes[citationInfo.type] }}
+								</div>
 							</div>
-							<gap-vue :size="2" direction="inline" v-if="citationInfo?.format"></gap-vue>
-							<div 
-							v-if="citationInfo?.type"
-							class="citation-chip">
-								{{ sourceTypes[citationInfo.type] }}
-							</div>
-						</div>
-						
-						<gap-vue :size="4"></gap-vue>
-						<citation-vue 
-						:citation-info="citationInfo" 
-						ref="citation">
-						</citation-vue>
-						<gap-vue :size="4"></gap-vue>
+							
+							<gap-vue :size="4"></gap-vue>
+							<citation-vue 
+							:citation-info="citationInfo" 
+							ref="citation">
+							</citation-vue>
+							<gap-vue :size="4"></gap-vue>
 
-						<div class="citation-box__footer">
-							<ion-button 
-							type="button" 
-							size="small" 
-							@click="copyCitation()" 
-							:disabled="copyButtonState !== 'ready'" 
-							class="citation-box__button normal theme-button-primary">
-								<span v-if="copyButtonState === 'success'">
-									<fa :icon="['far', 'check']"></fa>
-									<gap-vue direction="inline"></gap-vue>
-									Copied!
-								</span>
-								<span v-else>
-									<fa :icon="['far', 'copy']"></fa>
-									<gap-vue direction="inline"></gap-vue>
-									Copy
-								</span>
-							</ion-button>
-							<gap-vue :size="2" direction="inline"></gap-vue>
-							<ion-button 
-							type="button" 
-							size="small" 
-							@click="saveCitation()" 
-							:disabled="saveButtonState !== 'ready'" 
-							class="citation-box__button normal theme-button-primary">
-								<span v-if="saveButtonState === 'success'">
-									<fa :icon="['far', 'check']"></fa>
-									<gap-vue direction="inline"></gap-vue>
-									Saved!
-								</span>
-								<span v-else>
-									<fa :icon="['far', 'bookmark']"></fa>
-									<gap-vue direction="inline"></gap-vue>
-									Save
-								</span>
-							</ion-button>
+							<div class="citation-box__footer">
+								<ion-button 
+								type="button" 
+								size="small" 
+								@click="copyCitation()" 
+								:disabled="copyButtonState !== 'ready'" 
+								class="citation-box__button normal theme-button-primary">
+									<span v-if="copyButtonState === 'success'">
+										<fa :icon="['far', 'check']"></fa>
+										<gap-vue direction="inline"></gap-vue>
+										Copied!
+									</span>
+									<span v-else>
+										<fa :icon="['far', 'copy']"></fa>
+										<gap-vue direction="inline"></gap-vue>
+										Copy
+									</span>
+								</ion-button>
+								<gap-vue :size="2" direction="inline"></gap-vue>
+								<ion-button 
+								type="button" 
+								size="small" 
+								@click="saveCitation()" 
+								:disabled="saveButtonState !== 'ready'" 
+								class="citation-box__button normal theme-button-primary">
+									<span v-if="saveButtonState === 'success'">
+										<fa :icon="['far', 'check']"></fa>
+										<gap-vue direction="inline"></gap-vue>
+										Saved!
+									</span>
+									<span v-else>
+										<fa :icon="['far', 'bookmark']"></fa>
+										<gap-vue direction="inline"></gap-vue>
+										Save
+									</span>
+								</ion-button>
+							</div>
 						</div>
 					</div>
 
@@ -274,6 +281,9 @@ export default {
 				return 'Authors';
 			}
 			return 'Author';
+		},
+		citationBoxImage() {
+			return this.citationInfo?.source?.image ? `url("${this.citationInfo.source.image}")` : '';
 		}
     },
 	methods: {
@@ -322,11 +332,23 @@ export default {
 
 <style lang="scss" scoped>
 .citation-box {
-	padding: calc(var(--gap-base) * 4) calc(var(--gap-base) * 3);
 	background-color: rgba(233, 233, 233, .85);
 	background-image: linear-gradient(180deg, rgb(241 241 241 / 80%), rgb(210 210 210 / 80%));
 	box-shadow: var(--theme-box-shadow);
 	border-radius: var(--border-radius);
+	overflow: hidden;
+	&--image {
+		background-size: 60%;
+		background-repeat: no-repeat;
+		background-position: right center;
+	}
+	&__inner {
+		padding: calc(var(--gap-base) * 4) calc(var(--gap-base) * 3);
+		background-color: rgba(255, 255, 255, .6);
+		&--image {
+			background-image: linear-gradient(60deg, white 50%, transparent);
+		}
+	}
 	&__header,
 	&__footer {
 		display: flex;
