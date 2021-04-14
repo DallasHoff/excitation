@@ -117,7 +117,10 @@ export default {
         citation() {
             let citation = '';
             const { title, publisher, url } = this.citationInfo.source;
+            const allowedTags = ['cite'];
+            const allowedAttributes = [];
 
+            // Construct citation
             const f = (str, format) => str ? format.replaceAll('%', str) : '';
             const j = (str1, sep, str2) => `${str1}${str1 && str2 ? sep : ''}${str2}`;
 
@@ -166,6 +169,30 @@ export default {
                 }
 
             }
+
+            // Sanitize citation HTML
+			// Parse citation HTML into DOM fragment and check each contained element
+			const citationDom = document.createRange().createContextualFragment(citation);
+			const citationElems = citationDom.querySelectorAll('*');
+			citationElems.forEach(el => {
+				const elTag = el.tagName.toLowerCase();
+				if (allowedTags.indexOf(elTag) < 0) {
+					// Remove elements not whitelisted, leaving their contents
+					el.replaceWith(...el.childNodes);
+				} else {
+					// Remove attributes not whitelisted from whitelisted elements
+					[...el.attributes].forEach(attr => {
+						if (allowedAttributes.indexOf(attr.name) < 0) {
+							el.removeAttribute(attr.name);
+						}
+					});
+				}
+			});
+
+			// Convert DOM fragment back to HTML string and return it
+			const citationTempEl = document.createElement('span');
+			citationTempEl.appendChild(citationDom.cloneNode(true));
+            citation = citationTempEl.innerHTML;
 
             return citation;
         }
