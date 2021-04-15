@@ -203,7 +203,10 @@ http://ionicframework.com/docs/theming/ */
 
 		--ion-item-background: #000000;
 
-		--ion-card-background: #1c1c1d;
+		--ion-card-background: #1c1c1c;
+
+		--ion-toolbar-background: #191919;
+		--ion-tab-bar-background: #191919;
 	}
 
 	.ios ion-modal {
