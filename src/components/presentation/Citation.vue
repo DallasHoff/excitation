@@ -196,11 +196,15 @@ export default {
                 case 'chicago': {
                     switch (this.sourceType) {
                         case 'webpage': {
-                            citation = `${this.authors} [TODO]`;
+                            if (!this.authors) {
+                                citation = `${f(publisher,'%. ')}${f(title,'&ldquo;%.&rdquo;')}${this.pubDate?.MdY ? f(this.pubDate?.MdY,' %.') : f(this.accessDate?.MdY,' Accessed %.')}${f(url,' %.')}`;
+                            } else {
+                                citation = `${f(this.authors,'% ')}${f(title,'&ldquo;%.&rdquo;')}${f(publisher,' %.')}${this.pubDate?.MdY ? f(this.pubDate?.MdY,' %.') : f(this.accessDate?.MdY,' Accessed %.')}${f(url,' %.')}`;
+                            }
                             break;
                         }
                         case 'book': {
-                            citation = `${this.authors} [TODO]`;
+                            citation = `${f(this.authors,'% ')}[TODO]`;
                             break;
                         }
                     }
