@@ -168,6 +168,12 @@ export default {
 	},
 	watch: {
 		async citationFormat(n) {
+			if (this.showResults) {
+				this.searchResults = this.searchResults.map(result => {
+					result.format = n;
+					return result;
+				});
+			}
 			try {
 				await Storage.set({key: 'citationFormatInput', value: n});
 			} catch (err) {
