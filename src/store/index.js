@@ -2,7 +2,7 @@ import { createStore } from 'vuex';
 import { Plugins } from '@capacitor/core';
 const { Storage } = Plugins;
 
-const maxStoredCitations = 50;
+const maxStoredCitations = 200;
 const savedCitationsStorageKey = 'savedCitations';
 
 const store = createStore({
