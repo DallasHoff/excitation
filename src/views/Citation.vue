@@ -35,8 +35,18 @@
 							<div class="citation-box__header">
 								<div 
 								v-if="citationInfo?.format"
-								class="citation-chip">
-									{{ citationFormats[citationInfo.format] }}
+								class="citation-chip citation-chip--select">
+									<ion-select 
+									class="normal" 
+									:interface-options="{header: 'Format'}" 
+									v-model="citationInfo.format">
+										<ion-select-option 
+										v-for="format, formatKey in citationFormats" 
+										:value="formatKey" 
+										:key="formatKey">
+											{{ format }}
+										</ion-select-option>
+									</ion-select>
 								</div>
 								<gap-vue :size="2" direction="inline" v-if="citationInfo?.format"></gap-vue>
 								<div 
@@ -219,7 +229,7 @@
 </template>
 
 <script>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput, IonDatetime, IonButton } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput, IonDatetime, IonButton, IonSelect, IonSelectOption } from '@ionic/vue';
 import MainContentVue from '@/components/layout/MainContent.vue';
 import InputLabelVue from '@/components/forms/InputLabel.vue';
 import GapVue from '@/components/layout/Gap.vue';
@@ -231,7 +241,7 @@ library.add(faPlus, faTimes, faCopy, faBookmark, faCheck);
 
 export default {
 	name: 'Citation',
-	components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput, IonDatetime, IonButton, MainContentVue, InputLabelVue, GapVue, CitationVue },
+	components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput, IonDatetime, IonButton, IonSelect, IonSelectOption, MainContentVue, InputLabelVue, GapVue, CitationVue },
 	data() {
 		return {
 			saveButtonState: 'ready',
@@ -371,13 +381,16 @@ export default {
 }
 .citation-chip {
 	margin-bottom: calc(var(--gap-base) * 2);
-	padding: var(--gap-base) calc(var(--gap-base) * 2.5);
+	padding: var(--gap-base) calc(var(--gap-base) * 3);
 	color: var(--ion-color-secondary-contrast);
 	background-color: var(--ion-color-secondary-shade);
 	background-image: var(--theme-box-gradient-secondary);
 	box-shadow: var(--theme-box-shadow);
 	border-radius: 14px;
 	white-space: nowrap;
+	&--select {
+		padding: var(--gap-base) calc(var(--gap-base) * 1);
+	}
 }
 .author-input-group {
 	display: grid;

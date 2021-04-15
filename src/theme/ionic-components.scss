@@ -12,6 +12,12 @@ ion-datetime.theme-input {
 	border-radius: var(--border-radius);
 }
 
+ion-select.normal {
+	padding-top: 0;
+	padding-bottom: 0;
+	padding-left: 1ch;
+}
+
 ion-button.normal {
 	margin: 0;
 	--background-hover: var(--background);
