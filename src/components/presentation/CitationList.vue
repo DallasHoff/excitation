@@ -11,7 +11,7 @@
 				button 
 				detail 
 				@click="cite(citation)" 
-				@contextmenu.prevent="openDeleteOption('sliding-' + index)" 
+				@contextmenu.prevent="toggleDeleteOption('sliding-' + index, 'open')" 
 				class="citation-list__citation normal">
 					<ion-thumbnail 
 					class="citation-list__citation__thumbnail" 
@@ -39,7 +39,9 @@
 						</div>
 					</ion-label>
 				</ion-item>
-				<ion-item-options side="end">
+				<ion-item-options 
+				side="end" 
+				@contextmenu.prevent="toggleDeleteOption('sliding-' + index, 'close')">
 					<ion-item-option 
 					color="danger"
 					@click="deleteCitation(index)">
@@ -102,9 +104,9 @@ export default {
 			}
 			return names.join(', ');
 		},
-		openDeleteOption(ref) {
+		toggleDeleteOption(ref, action) {
 			if (this.enableSliding === true) {
-				this.$refs[ref].$el.open('end');
+				this.$refs[ref].$el[action]('end');
 			}
 		},
 		deleteCitation(index) {
