@@ -221,7 +221,7 @@
 <script>
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput, IonDatetime, IonButton } from '@ionic/vue';
 import MainContentVue from '@/components/layout/MainContent.vue';
-import InputLabelVue from '@/components/presentation/InputLabel.vue';
+import InputLabelVue from '@/components/forms/InputLabel.vue';
 import GapVue from '@/components/layout/Gap.vue';
 import CitationVue from '@/components/presentation/Citation.vue';
 

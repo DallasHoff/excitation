@@ -108,7 +108,7 @@ library.add(faPaste, faSearch);
 
 import MainContentVue from '@/components/layout/MainContent.vue';
 import GapVue from '@/components/layout/Gap.vue';
-import InputLabelVue from '@/components/presentation/InputLabel.vue';
+import InputLabelVue from '@/components/forms/InputLabel.vue';
 import RadioBoxesVue from '@/components/forms/RadioBoxes.vue';
 import AlertBoxVue from '@/components/presentation/AlertBox.vue';
 import CitationListVue from '@/components/presentation/CitationList.vue';
