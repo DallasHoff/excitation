@@ -344,9 +344,10 @@ export default {
 
 <style lang="scss" scoped>
 .citation-box {
+	--citation-gradient: linear-gradient(180deg, rgb(241 241 241 / 80%), rgb(210 210 210 / 80%));
 	position: relative;
 	background-color: rgba(233, 233, 233, .85);
-	background-image: linear-gradient(180deg, rgb(241 241 241 / 80%), rgb(210 210 210 / 80%));
+	background-image: var(--citation-gradient);
 	box-shadow: var(--theme-box-shadow);
 	border-radius: var(--border-radius);
 	overflow: hidden;
@@ -382,9 +383,9 @@ export default {
 .citation-chip {
 	margin-bottom: calc(var(--gap-base) * 2);
 	padding: var(--gap-base) calc(var(--gap-base) * 3);
-	color: var(--ion-color-secondary-contrast);
-	background-color: var(--ion-color-secondary-shade);
-	background-image: var(--theme-box-gradient-secondary);
+	color: black;
+	background-color: var(--ion-color-medium);
+	background-image: var(--citation-gradient);
 	box-shadow: var(--theme-box-shadow);
 	border-radius: 14px;
 	white-space: nowrap;
