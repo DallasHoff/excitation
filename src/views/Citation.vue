@@ -8,7 +8,7 @@
 				<ion-title>Citation</ion-title>
 			</ion-toolbar>
 		</ion-header>
-		<ion-content :fullscreen="true">
+		<ion-content>
 			<ion-header collapse="condense">
 				<ion-toolbar>
                     <ion-buttons slot="start">
