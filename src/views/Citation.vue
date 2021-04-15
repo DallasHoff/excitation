@@ -23,10 +23,12 @@
 					<h1>Your Citation</h1>
 					<gap-vue :size="4"></gap-vue>
 
-					<div 
-					class="citation-box" 
-					:class="{'citation-box--image': !!citationInfo?.source?.image}" 
-					:style="{'background-image': citationBoxImage}">
+					<div class="citation-box">
+						<div 
+						class="citation-box__bg" 
+						:style="{'background-image': citationBoxImage}" 
+						v-if="citationInfo?.source?.image">
+						</div>
 						<div 
 						class="citation-box__inner" 
 						:class="{'citation-box__inner--image': !!citationInfo?.source?.image}">
@@ -332,17 +334,25 @@ export default {
 
 <style lang="scss" scoped>
 .citation-box {
+	position: relative;
 	background-color: rgba(233, 233, 233, .85);
 	background-image: linear-gradient(180deg, rgb(241 241 241 / 80%), rgb(210 210 210 / 80%));
 	box-shadow: var(--theme-box-shadow);
 	border-radius: var(--border-radius);
 	overflow: hidden;
-	&--image {
-		background-size: 60%;
+	&__bg {
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		width: 60%;
+		height: 100%;
+		background-size: cover;
 		background-repeat: no-repeat;
 		background-position: right center;
 	}
 	&__inner {
+		position: relative;
 		padding: calc(var(--gap-base) * 4) calc(var(--gap-base) * 3);
 		background-color: rgba(255, 255, 255, .6);
 		&--image {
