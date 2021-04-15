@@ -389,6 +389,10 @@ export default {
 		margin-bottom: calc(var(--gap-base) * 2);
 	}
 }
+.ion-page-hidden .author-input-group {
+	/* Disable transition during route change */
+	transition-duration: 0s;
+}
 .remove-author-button {
 	font-size: 1.4em;
 	height: auto;
