@@ -31,7 +31,8 @@ export default {
             type: String
         },
         imgAlt: {
-            type: String
+            type: String,
+            default: ''
         },
         sourceType: {
             type: String,
