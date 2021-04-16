@@ -3,7 +3,7 @@
         <transition-group name="v-fade-left">
 			<ion-item-sliding 
 			v-for="(citation, index) in citationSet" 
-			:key="citation.savedTime" 
+			:key="citation.savedTime || citation.source.url" 
 			:ref="'sliding-' + index" 
 			:disabled="enableSliding === false" 
 			:style="{'transition-delay': (40 * index) + 'ms'}">
