@@ -315,16 +315,36 @@ export default {
 		removeAuthor(index) {
 			this.citationInfo?.source?.authors?.splice(index, 1);
 		},
-		copyCitation() {
+		async copyCitation() {
 			const copyHTML = this.$refs.citation.$el.innerHTML;
-			function listener(evt) {
-				evt.clipboardData.setData('text/html', copyHTML);
-				evt.clipboardData.setData('text/plain', copyHTML);
-				evt.preventDefault();
+			const copyText = this.$refs.citation.$el.innerText;
+			try {
+				if (!!navigator?.clipboard?.write && !!window?.ClipboardItem) {
+					await navigator.clipboard.write([
+						new window.ClipboardItem({
+							'text/html': new Blob(
+								[ copyHTML ],
+								{ type: 'text/html' }
+							),
+							'text/plain': new Blob(
+								[ copyText ],
+								{ type: 'text/plain' }
+							)
+						})
+					]);
+				} else {
+					const listener = (evt) => {
+						evt.clipboardData.setData('text/html', copyHTML);
+						evt.clipboardData.setData('text/plain', copyText);
+						evt.preventDefault();
+					};
+					document.addEventListener('copy', listener);
+					document.execCommand('copy');
+					document.removeEventListener('copy', listener);
+				}
+			} catch(err) {
+				console.warn(err);
 			}
-			document.addEventListener('copy', listener);
-			document.execCommand('copy');
-			document.removeEventListener('copy', listener);
 			this.copyButtonState = 'success';
 			setTimeout(() => {
 				this.copyButtonState = 'ready';

@@ -156,7 +156,7 @@ export default {
 			const platforms = getPlatforms();
 			if (
 				platforms.indexOf('hyrid') > -1 || 
-				(!!navigator.clipboard && !!navigator.clipboard.read)
+				!!navigator?.clipboard?.readText
 			) {
 				return true;
 			}
