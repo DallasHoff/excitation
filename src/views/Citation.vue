@@ -24,14 +24,17 @@
 					<gap-vue :size="4"></gap-vue>
 
 					<div class="citation-box">
-						<div 
-						class="citation-box__bg" 
-						:style="{'background-image': citationBoxImage}" 
-						v-if="citationInfo?.source?.image">
-						</div>
+						<ion-img 
+						v-if="showSourceImg && citationInfo?.source?.image"
+						:src="citationInfo.source.image" 
+						alt="" 
+						@ion-img-did-load="showSourceImg = true" 
+						@ion-error="showSourceImg = false" 
+						class="citation-box__bg">
+						</ion-img>
 						<div 
 						class="citation-box__inner" 
-						:class="{'citation-box__inner--image': !!citationInfo?.source?.image}">
+						:class="{'citation-box__inner--image': showSourceImg && !!citationInfo?.source?.image}">
 							<div class="citation-box__header">
 								<div 
 								v-if="citationInfo?.format"
@@ -229,7 +232,7 @@
 </template>
 
 <script>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput, IonDatetime, IonButton, IonSelect, IonSelectOption } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput, IonDatetime, IonButton, IonSelect, IonSelectOption, IonImg } from '@ionic/vue';
 import MainContentVue from '@/components/layout/MainContent.vue';
 import InputLabelVue from '@/components/forms/InputLabel.vue';
 import GapVue from '@/components/layout/Gap.vue';
@@ -241,9 +244,10 @@ library.add(faPlus, faTimes, faCopy, faBookmark, faCheck);
 
 export default {
 	name: 'Citation',
-	components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput, IonDatetime, IonButton, IonSelect, IonSelectOption, MainContentVue, InputLabelVue, GapVue, CitationVue },
+	components: { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonInput, IonDatetime, IonButton, IonSelect, IonSelectOption, IonImg, MainContentVue, InputLabelVue, GapVue, CitationVue },
 	data() {
 		return {
+			showSourceImg: true,
 			saveButtonState: 'ready',
 			copyButtonState: 'ready'
 		}
@@ -293,9 +297,6 @@ export default {
 				return 'Authors';
 			}
 			return 'Author';
-		},
-		citationBoxImage() {
-			return this.citationInfo?.source?.image ? `url("${this.citationInfo.source.image}")` : '';
 		}
     },
 	methods: {
@@ -378,9 +379,8 @@ export default {
 		bottom: 0;
 		width: 60%;
 		height: 100%;
-		background-size: cover;
-		background-repeat: no-repeat;
-		background-position: right center;
+		object-fit: cover;
+		object-position: right center;
 	}
 	&__inner {
 		position: relative;

@@ -11,23 +11,13 @@
 				button 
 				detail 
 				@click="cite(citation)" 
-				@contextmenu.prevent="toggleDeleteOption('sliding-' + index, 'open')" 
+				@contextmenu="toggleDeleteOption($event, 'sliding-' + index, 'open')" 
 				class="citation-list__citation normal">
-					<ion-thumbnail 
-					class="citation-list__citation__thumbnail" 
-					slot="start">
-						<ion-img 
-						v-if="citation.source.image" 
-						:src="citation.source.image" 
-						alt="">
-						</ion-img>
-						<fa 
-						v-else 
-						:icon="['far', sourceTypeIcon(citation.type)]" 
-						size="2x" 
-						class="citation-list__citation__icon">
-						</fa>
-					</ion-thumbnail>
+					<source-img-vue 
+					slot="start" 
+					:img-url="citation.source.image" 
+					:source-type="citation.type">
+					</source-img-vue>
 					<ion-label>
 						<h3 class="citation-list__citation__title">
 							{{ citation.source.title }}
@@ -41,7 +31,7 @@
 				</ion-item>
 				<ion-item-options 
 				side="end" 
-				@contextmenu.prevent="toggleDeleteOption('sliding-' + index, 'close')">
+				@contextmenu="toggleDeleteOption($event, 'sliding-' + index, 'close')">
 					<ion-item-option 
 					color="danger"
 					@click="deleteCitation(index)">
@@ -54,15 +44,12 @@
 </template>
 
 <script>
-import { IonList, IonItem, IonThumbnail, IonImg, IonLabel, IonItemSliding, IonItemOptions, IonItemOption } from '@ionic/vue';
-
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faGlobe, faBook } from '@fortawesome/pro-regular-svg-icons';
-library.add(faGlobe, faBook);
+import { IonList, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption } from '@ionic/vue';
+import SourceImgVue from './SourceImg.vue';
 
 export default {
     name: 'CitationList',
-    components: { IonList, IonItem, IonThumbnail, IonImg, IonLabel, IonItemSliding, IonItemOptions, IonItemOption },
+    components: { IonList, IonItem, IonLabel, IonItemSliding, IonItemOptions, IonItemOption, SourceImgVue },
     props: {
         citationSet: {
             type: Array,
@@ -74,13 +61,6 @@ export default {
 		}
     },
     methods: {
-		sourceTypeIcon(sourceType) {
-			switch (sourceType) {
-				case 'webpage': return 'globe';
-				case 'book': return 'book';
-			}
-			return '';
-		},
 		searchResultAuthors(authorArray) {
 			// Format author name list
 			if (!authorArray) return null;
@@ -104,8 +84,9 @@ export default {
 			}
 			return names.join(', ');
 		},
-		toggleDeleteOption(ref, action) {
+		toggleDeleteOption(evt, ref, action) {
 			if (this.enableSliding === true) {
+				evt.preventDefault();
 				this.$refs[ref].$el[action]('end');
 			}
 		},
@@ -124,16 +105,6 @@ export default {
 .citation-list {
 	margin: 0 var(--revert-content-padding);
 	&__citation {
-		&__thumbnail {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			color: var(--ion-color-secondary);
-			background: rgba(var(--ion-color-secondary-rgb), .2);
-		}
-		&__icon {
-			opacity: .5;
-		}
 		&__title,
 		&__authors {
 			white-space: nowrap;
