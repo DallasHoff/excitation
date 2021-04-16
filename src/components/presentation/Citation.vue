@@ -204,7 +204,11 @@ export default {
                             break;
                         }
                         case 'book': {
-                            citation = `${f(this.authors,'% ')}[TODO]`;
+                            if (!this.authors) {
+                                citation = `${f(publisher,'%. ')}${f(title,'<cite>%.</cite>')}${f(this.pubDate?.Y || 'n.d.',' %.')}`;
+                            } else {
+                                citation = `${f(this.authors,'% ')}${f(title,'<cite>%.</cite>')}${j(f(publisher,' %'),',',f(this.pubDate?.Y || 'n.d.',' %'))}${publisher || this.pubDate?.Y ? '.' : ''}`;
+                            }
                             break;
                         }
                     }
