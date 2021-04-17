@@ -28,7 +28,6 @@
 						v-if="showSourceImg && citationInfo?.source?.image"
 						:src="citationInfo.source.image" 
 						alt="" 
-						@ion-img-did-load="showSourceImg = true" 
 						@ion-error="showSourceImg = false" 
 						class="citation-box__bg">
 						</ion-img>
@@ -299,6 +298,13 @@ export default {
 			return 'Author';
 		}
     },
+	watch: {
+		'citationInfo.source.image'(n, o) {
+			if (n !== o) {
+				this.showSourceImg = true;
+			}
+		}
+	},
 	methods: {
 		getRandomInt() {
 			return Math.floor(Math.random() * 1000000);

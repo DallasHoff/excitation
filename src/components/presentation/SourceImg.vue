@@ -4,7 +4,6 @@
         v-if="showImg && imgUrl" 
         :src="imgUrl" 
         :alt="imgAlt" 
-        @ion-img-did-load="showImg = true" 
         @ion-error="showImg = false">
         </ion-img>
         <fa 
@@ -52,6 +51,13 @@ export default {
 			}
 			return '';
 		}
+    },
+    watch: {
+        imgUrl(n, o) {
+            if (n !== o) {
+                this.showImg = true;
+            }
+        }
     }
 }
 </script>
