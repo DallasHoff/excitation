@@ -4,15 +4,18 @@
   "description": "An app that helps users generate citations for papers, articles, and other academic documents",
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "update": "git pull && npm ci && cd api && npm ci",
+    "build": "vue-cli-service build && npx cap copy",
     "api-start": "cd api && npm run start",
     "api-dev": "cd api && npm run dev",
-    "deploy-api": "cd api && npm run deploy",
-    "deploy-hosting": "npm run build && firebase deploy --only hosting",
+    "cap-sync": "npx cap sync",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "update": "git pull && npm ci && cd api && npm ci",
+    "icons": "cordova-res android --skip-config --copy --icon-background-source '#FFFFFF'",
+    "deploy-api": "cd api && npm run deploy",
+    "deploy-hosting": "npm run build && firebase deploy --only hosting",
+    "android": "npx cap open android"
   },
   "repository": {
     "type": "git",
@@ -33,6 +36,7 @@
   },
   "homepage": "https://github.com/DallasHoff/excitation#readme",
   "dependencies": {
+    "@capacitor/android": "^2.4.7",
     "@capacitor/core": "2.4.7",
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-regular-svg-icons": "^5.15.2",
