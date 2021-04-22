@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "903874714615",
+    "project_id": "excitation-app",
+    "storage_bucket": "excitation-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:903874714615:android:2687d5d1591d457cb0ecf2",
+        "android_client_info": {
+          "package_name": "app.excitation.www"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "903874714615-dmb3i7hiogp2cl8tu9bdnr97cjt22rns.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDc-yZxAfHTRxOQRMxXEXtglnWy2a_JO3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "903874714615-dmb3i7hiogp2cl8tu9bdnr97cjt22rns.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
