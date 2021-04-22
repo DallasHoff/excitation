@@ -79,7 +79,10 @@
 					</form>
 				</section>
 
-				<section v-show="showResults">
+				<section 
+				v-show="showResults" 
+				ref="searchResults"
+				class="search-results">
 					<transition name="v-fade-down">
 						<h2 v-show="showResults">
 							Sources We Found
@@ -88,7 +91,10 @@
 					<citation-list-vue :citation-set="searchResults"></citation-list-vue>
 				</section>
 
-				<alert-box-vue color="danger" :show="searchErrorShow">
+				<alert-box-vue 
+				:show="searchErrorShow" 
+				ref="searchErrorAlert" 
+				color="danger">
 					{{ searchError }}
 				</alert-box-vue>
 			</main-content-vue>
@@ -233,7 +239,14 @@ export default {
 				this.searchError = 'A network error occurred. Please check your connection and try again.';
 			} finally {
 				this.searchLoading = false;
-				if (this.searchError) this.searchErrorShow = true;
+				let scrollTo = this.$refs.searchResults;
+				if (this.searchError) {
+					scrollTo = this.$refs.searchErrorAlert.$el;
+					this.searchErrorShow = true;
+				}
+				this.$nextTick(() => {
+					scrollTo.scrollIntoView({behavior: 'smooth'});
+				});
 			}
 		}
 	},
@@ -250,3 +263,9 @@ export default {
 	}
 }
 </script>
+
+<style lang="scss" scoped>
+.search-results {
+	min-height: 100vh;
+}
+</style>
