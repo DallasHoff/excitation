@@ -79,7 +79,7 @@ export default {
                     s: initial(suffix)
                 };
                 if (partKey in parts && !!parts[partKey]) {
-                    part = format ? format.replaceAll('%', parts[partKey]) : parts[partKey];
+                    part = format ? format.replace(/%/g, parts[partKey]) : parts[partKey];
                 }
                 return part;
             };
@@ -152,7 +152,7 @@ export default {
             const allowedAttributes = [];
 
             // Construct citation
-            const f = (str, format) => str ? format.replaceAll('%', str) : '';
+            const f = (str, format) => str ? format.replace(/%/g, str) : '';
             const j = (str1, sep, str2) => `${str1}${str1 && str2 ? sep : ''}${str2}`;
 
             switch (this.citationFormat) {
