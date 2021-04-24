@@ -32,4 +32,10 @@ export default {
 	margin-top: 2px;
 	margin-bottom: 2px;
 }
+
+@media only screen and (min-width: 1024px) {
+	ion-tab-bar {
+		display: none;
+	}
+}
 </style>

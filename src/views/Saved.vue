@@ -2,6 +2,9 @@
 	<ion-page>
 		<ion-header>
 			<ion-toolbar>
+                <ion-buttons slot="start">
+                    <ion-back-button default-href="/home"></ion-back-button>
+                </ion-buttons>
 				<ion-title>Saved Citations</ion-title>
 			</ion-toolbar>
 		</ion-header>
@@ -12,7 +15,7 @@
 				</ion-toolbar>
 			</ion-header>
 			
-			<main-content-vue v-if="savedCitations?.length > 0">
+			<main-content-vue v-if="savedCitations?.length > 0" no-sidebar>
 				<section>
 					<citation-list-vue 
 					:citation-set="savedCitations" 
@@ -31,14 +34,14 @@
 </template>
 
 <script>
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/vue';
+import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonButton } from '@ionic/vue';
 import CitationListVue from '@/components/presentation/CitationList.vue';
 import MainContentVue from '@/components/layout/MainContent.vue';
 import CenteredMessageVue from '@/components/layout/CenteredMessage.vue';
 
 export default {
 	name: 'Saved',
-	components: { IonHeader, IonToolbar, IonTitle, IonContent, IonPage, IonButton, CitationListVue, MainContentVue, CenteredMessageVue },
+	components: { IonHeader, IonToolbar, IonTitle, IonContent, IonButtons, IonBackButton, IonPage, IonButton, CitationListVue, MainContentVue, CenteredMessageVue },
 	computed: {
 		savedCitations() {
 			return this.$store.state.savedCitations;

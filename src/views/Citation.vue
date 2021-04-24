@@ -3,7 +3,7 @@
 		<ion-header>
 			<ion-toolbar>
                 <ion-buttons slot="start">
-                    <ion-back-button></ion-back-button>
+                    <ion-back-button default-href="/home"></ion-back-button>
                 </ion-buttons>
 				<ion-title>Citation</ion-title>
 			</ion-toolbar>
@@ -11,9 +11,6 @@
 		<ion-content>
 			<ion-header collapse="condense">
 				<ion-toolbar>
-                    <ion-buttons slot="start">
-                        <ion-back-button></ion-back-button>
-                    </ion-buttons>
 					<ion-title size="large">Citation</ion-title>
 				</ion-toolbar>
 			</ion-header>
@@ -124,57 +121,55 @@
 
 					<div>
 						<h3>{{ authorLabel }}</h3>
-						<transition-group name="v-fade-up">
-							<div 
-							v-for="(author, index) in citationInfo.source.authors" 
-							:key="author.key" 
-							class="author-input-group">
-								<input-label-vue text="First">
-									<ion-input 
-									:name="'author-first-' + index" 
-									type="text" 
-									inputmode="text" 
-									v-model="author.first" 
-									class="theme-input">
-									</ion-input>
-								</input-label-vue>
-								<input-label-vue text="Middle">
-									<ion-input 
-									:name="'author-middle-' + index" 
-									type="text" 
-									inputmode="text" 
-									v-model="author.middle" 
-									class="theme-input">
-									</ion-input>
-								</input-label-vue>
-								<input-label-vue text="Last">
-									<ion-input 
-									:name="'author-last-' + index" 
-									type="text" 
-									inputmode="text" 
-									v-model="author.last" 
-									class="theme-input">
-									</ion-input>
-								</input-label-vue>
-								<input-label-vue text="Suffix">
-									<ion-input 
-									:name="'author-suffix-' + index" 
-									type="text" 
-									inputmode="text" 
-									v-model="author.suffix" 
-									class="theme-input">
-									</ion-input>
-								</input-label-vue>
-								<ion-button 
-								type="button" 
-								fill="clear" 
-								class="remove-author-button" 
-								:disabled="citationInfo.source.authors.length < 2" 
-								@click="removeAuthor(index)">
-									<fa :icon="['far', 'times']" title="Remove this author"></fa>
-								</ion-button>
-							</div>
-						</transition-group>
+						<div 
+						v-for="(author, index) in citationInfo.source.authors" 
+						:key="author.key" 
+						class="author-input-group">
+							<input-label-vue text="First">
+								<ion-input 
+								:name="'author-first-' + index" 
+								type="text" 
+								inputmode="text" 
+								v-model="author.first" 
+								class="theme-input">
+								</ion-input>
+							</input-label-vue>
+							<input-label-vue text="Middle">
+								<ion-input 
+								:name="'author-middle-' + index" 
+								type="text" 
+								inputmode="text" 
+								v-model="author.middle" 
+								class="theme-input">
+								</ion-input>
+							</input-label-vue>
+							<input-label-vue text="Last">
+								<ion-input 
+								:name="'author-last-' + index" 
+								type="text" 
+								inputmode="text" 
+								v-model="author.last" 
+								class="theme-input">
+								</ion-input>
+							</input-label-vue>
+							<input-label-vue text="Suffix">
+								<ion-input 
+								:name="'author-suffix-' + index" 
+								type="text" 
+								inputmode="text" 
+								v-model="author.suffix" 
+								class="theme-input">
+								</ion-input>
+							</input-label-vue>
+							<ion-button 
+							type="button" 
+							fill="clear" 
+							class="remove-author-button" 
+							:disabled="citationInfo.source.authors.length < 2" 
+							@click="removeAuthor(index)">
+								<fa :icon="['far', 'times']" title="Remove this author"></fa>
+							</ion-button>
+						</div>
 					</div>
 					<ion-button 
 					type="button" 
@@ -363,7 +358,6 @@ export default {
 			setTimeout(() => {
 				this.saveButtonState = 'ready';
 			}, 3000);
-			this.$router.push('/saved');
 		}
 	}
 }
@@ -428,10 +422,6 @@ export default {
 	&:last-child {
 		margin-bottom: calc(var(--gap-base) * 2);
 	}
-}
-.ion-page-hidden .author-input-group {
-	/* Disable transition during route change */
-	transition-duration: 0s;
 }
 .remove-author-button {
 	font-size: 1.4em;

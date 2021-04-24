@@ -31,6 +31,6 @@ export default {
 <style lang="scss" scoped>
 span.input-label__text {
     font-size: 1.2em;
-    color: rgba(var(--ion-color-dark-rgb), .8);
+    color: var(--theme-text-color);
 }
 </style>
