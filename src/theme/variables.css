@@ -16,7 +16,8 @@ http://ionicframework.com/docs/theming/ */
 	--theme-box-gradient-primary-inset: linear-gradient(180deg, #0064f4, #31a1f1);
 	--theme-box-gradient-secondary: linear-gradient(180deg, #7fd6f3, #3fb2f0);
 	--theme-box-gradient-secondary-inset: linear-gradient(180deg, #3fb2f0, #7fd6f3);
-	--theme-box-shadow: inset 0 2px 3px rgb(255 255 255 / 15%), 0 1px 3px rgb(0 0 0 / 40%);
+	--theme-box-shadow-outer: 0 1px 3px rgb(0 0 0 / 40%);
+	--theme-box-shadow: inset 0 2px 3px rgb(255 255 255 / 15%), var(--theme-box-shadow-outer);
 	--theme-box-shadow-inset: inset 0 -1px 3px rgb(255 255 255 / 10%), inset 0 2px 3px rgb(0 0 0 / 20%);
 }
 

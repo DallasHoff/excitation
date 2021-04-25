@@ -70,8 +70,9 @@ export default {
 		section {
 			--ion-background-color: var(--ion-color-light);
 			background-color: var(--ion-background-color);
+			box-shadow: var(--theme-box-shadow-outer);
 			border-radius: var(--border-radius);
-			padding: 0 var(--content-padding) var(--border-radius);
+			padding: 0 var(--content-padding) calc(var(--content-padding) / 2);
 		}
 	}
 }

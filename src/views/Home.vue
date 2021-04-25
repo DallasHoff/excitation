@@ -266,6 +266,6 @@ export default {
 
 <style lang="scss" scoped>
 .search-results {
-	min-height: 100vh;
+	min-height: 80vh;
 }
 </style>
