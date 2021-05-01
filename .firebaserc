@@ -1,5 +1,17 @@
 {
-	"projects": {
-		"default": "excitation-app"
-	}
+  "projects": {
+    "default": "excitation-app"
+  },
+  "targets": {
+    "excitation-app": {
+      "hosting": {
+        "app": [
+          "excitation-app"
+        ],
+        "api": [
+          "excitation-api"
+        ]
+      }
+    }
+  }
 }
