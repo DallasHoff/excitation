@@ -17,15 +17,6 @@ export default defineComponent({
 	created() {
 		// Initialize list of saved citations
 		this.$store.commit('initSavedCitations');
-	},
-	mounted() {
-		// Scroll content when keyboard opens or closes
-		window.addEventListener('ionKeyboardDidShow', () => {
-			document.activeElement.scrollIntoView({behavior: 'smooth'});
-		});
-		window.addEventListener('ionKeyboardDidHide', () => {
-			document.querySelector('ion-header').scrollIntoView({behavior: 'smooth'});
-		});
 	}
 });
 </script>
