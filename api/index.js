@@ -64,7 +64,9 @@ app.get('/cite/webpage', wrap(async (req, res) => {
         try {
             schemaJSON = JSON.parse($(el).html());
             [schemaContext] = schemaJSON?.['@context']?.match(/^https?:\/\/schema\.org/) || [];
-        } catch (err) {}
+        } catch (err) {
+            // Invalid JSON-LD: rest of this iteration will do nothing
+        }
         if (schemaJSON && schemaContext) {
             if (Array.isArray(schemaJSON?.['@graph'])) {
                 // Split array of multiple schemas
@@ -86,17 +88,18 @@ app.get('/cite/webpage', wrap(async (req, res) => {
     $(itemSelector).each((i, el) => {
         var item = {};
         var parentItem = $(el).parents(itemSelector).first();
+        var itemprop, itemtypeRef, context, type = null;
         if ($(el).is('[itemscope][itemtype]')) {
             // Microdata
-            var itemprop = $(el).attr('itemprop');
-            var itemtypeRef = $(el).attr('itemtype');
-            var [match, context, type] = itemtypeRef?.match?.(/^(https?:\/\/schema\.org)\/(\w+)/) || [];
+            itemprop = $(el).attr('itemprop');
+            itemtypeRef = $(el).attr('itemtype');
+            [, context, type] = itemtypeRef?.match?.(/^(https?:\/\/schema\.org)\/(\w+)/) || [];
         } else if ($(el).is('[typeof]')) {
             // RDFa
-            var itemprop = $(el).attr('property');
-            var itemtypeRef = $(el).attr('typeof');
-            var type = $(el).attr('typeof');
-            var [match, context] = ($(el).attr('vocab') || $(el).parents('[vocab]').first().attr('vocab'))?.match?.(/^(https?:\/\/schema\.org)/) || [];
+            itemprop = $(el).attr('property');
+            itemtypeRef = $(el).attr('typeof');
+            type = $(el).attr('typeof');
+            [, context] = ($(el).attr('vocab') || $(el).parents('[vocab]').first().attr('vocab'))?.match?.(/^(https?:\/\/schema\.org)/) || [];
         }
         // Only use items with schema.org vocabulary and type defined
         if (context && type) {
@@ -402,12 +405,12 @@ app.get('/cite/book', wrap(async (req, res) => {
 
 
 // Handle 404's
-app.use((req, res, next) => {
+app.use((req, res) => {
     return res.status(404).json({error: 'The specified endpoint was not found.'});
 });
 
 // Handle errors
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
     console.error(err);
     return res.status(500).json({error: 'A server error occurred. Please try again.'});
 });
