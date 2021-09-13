@@ -218,8 +218,11 @@ export default {
             }
 
             // Sanitize citation HTML
-			// Parse citation HTML into DOM fragment and check each contained element
-			const citationDom = document.createRange().createContextualFragment(citation);
+			// Parse citation HTML string into DOM fragment
+			const template = document.createElement('template');
+			template.innerHTML = citation;
+			const citationDom = template.content;
+            // Check each contained element
 			const citationElems = citationDom.querySelectorAll('*');
 			citationElems.forEach(el => {
 				const elTag = el.tagName.toLowerCase();
