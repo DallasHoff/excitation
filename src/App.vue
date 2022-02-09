@@ -1,6 +1,6 @@
 <template>
 	<ion-app>
-		<ion-router-outlet />
+		<ion-router-outlet swipeGesture="false" />
 	</ion-app>
 </template>
 

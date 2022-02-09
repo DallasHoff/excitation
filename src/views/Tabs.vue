@@ -1,6 +1,7 @@
 <template>
 	<ion-page>
 		<ion-tabs>
+			<ion-router-outlet swipeGesture="false" />
 			<ion-tab-bar slot="bottom">
 				<ion-tab-button tab="home" href="/home">
 					<fa class="tab-button-icon" :icon="['far', 'home']" size="2x" fixed-width></fa>
@@ -16,14 +17,14 @@
 </template>
 
 <script lang="ts">
-import { IonTabBar, IonTabButton, IonTabs, IonLabel, IonPage } from '@ionic/vue';
+import { IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, IonLabel, IonPage } from '@ionic/vue';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faHome, faBookmark } from '@fortawesome/pro-regular-svg-icons';
 library.add(faHome, faBookmark);
 
 export default {
 	name: 'Tabs',
-	components: { IonLabel, IonTabs, IonTabBar, IonTabButton, IonPage }
+	components: { IonRouterOutlet, IonLabel, IonTabs, IonTabBar, IonTabButton, IonPage }
 }
 </script>
 
