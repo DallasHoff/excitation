@@ -12,10 +12,11 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "update": "git pull && npm ci && cd api && npm ci",
-    "icons": "cordova-res android --skip-config --copy --icon-background-source '#FFFFFF'",
+    "icons": "cordova-res ios --skip-config --copy && cordova-res android --skip-config --copy --icon-background-source '#FFFFFF'",
     "deploy-api": "cd api && npm run deploy",
     "deploy-hosting": "npm run build && firebase deploy --only hosting",
-    "android": "npx cap open android"
+    "android": "npx cap open android",
+    "ios": "npx cap open ios"
   },
   "repository": {
     "type": "git",
@@ -38,6 +39,7 @@
   "dependencies": {
     "@capacitor/android": "^2.5.0",
     "@capacitor/core": "2.4.7",
+    "@capacitor/ios": "^2.4.7",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-regular-svg-icons": "^5.15.4",
     "@fortawesome/pro-regular-svg-icons": "^5.15.4",
