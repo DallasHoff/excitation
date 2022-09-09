@@ -2,6 +2,7 @@ api/.env*
 .ionic
 .firebase
 .npmrc
+.DS_Store
 
 # Logs
 logs
