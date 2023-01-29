@@ -3,6 +3,7 @@ api/.env*
 .firebase
 .npmrc
 .DS_Store
+/Icon?
 
 # Logs
 logs
